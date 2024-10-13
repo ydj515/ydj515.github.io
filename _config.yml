@@ -34,8 +34,8 @@ github:
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: ydj515
-  email: ydj515@gmail.com # change to your email address
+  name: yoo dong jin
+  email: ydj515@naver.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
     # - https://twitter.com/username # change to your twitter homepage
@@ -94,7 +94,7 @@ theme_mode: # [light | dark]
 cdn: "https://media.discordapp.net/attachments"
 
 # the avatar on sidebar, support local or CORS resources
-avatar: "1234022863946907660/1234025744926113802/avatar.jpg?ex=662f3b88&is=662dea08&hm=e94a0f2bf0d9282f58075a31640f5e8d7471668a8ee270ad9d82dc13351169ad"
+avatar: "/assets/img/profile/emoji.png"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
