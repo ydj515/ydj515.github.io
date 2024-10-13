@@ -1,19 +1,19 @@
-import Toast from 'bootstrap/js/src/toast';
+---
+layout: compress
+permalink: /assets/js/dist/:basename.min.js
+---
 
 if ('serviceWorker' in navigator) {
-  // Get Jekyll config from URL parameters
-  const src = new URL(document.currentScript.src);
-  const register = src.searchParams.get('register');
-  const baseUrl = src.searchParams.get('baseurl');
+  const isEnabled = '{{ site.pwa.enabled }}' === 'true';
 
-  if (register) {
-    const swUrl = `${baseUrl}/sw.min.js`;
+  if (isEnabled) {
+    const swUrl = '{{ '/sw.min.js' | relative_url }}';
     const notification = document.getElementById('notification');
     const btnRefresh = notification.querySelector('.toast-body>button');
-    const popupWindow = Toast.getOrCreateInstance(notification);
+    const popupWindow = bootstrap.Toast.getOrCreateInstance(notification);
 
     navigator.serviceWorker.register(swUrl).then((registration) => {
-      // Restore the update window that was last manually closed by the user
+      {% comment %}In case the user ignores the notification{% endcomment %}
       if (registration.waiting) {
         popupWindow.show();
       }
@@ -32,13 +32,14 @@ if ('serviceWorker' in navigator) {
         if (registration.waiting) {
           registration.waiting.postMessage('SKIP_WAITING');
         }
+
         popupWindow.hide();
       });
     });
 
     let refreshing = false;
 
-    // Detect controller change and refresh all the opened tabs
+    {% comment %}Detect controller change and refresh all the opened tabs{% endcomment %}
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!refreshing) {
         window.location.reload();

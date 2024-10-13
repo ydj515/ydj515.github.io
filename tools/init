@@ -9,8 +9,6 @@ CLI=("git" "npm")
 
 ACTIONS_WORKFLOW=pages-deploy.yml
 
-RELEASE_HASH=$(git log --grep="chore(release):" -1 --pretty="%H")
-
 # temporary file suffixes that make `sed -i` compatible with BSD and Linux
 TEMP_SUFFIX="to-delete"
 
@@ -30,7 +28,7 @@ help() {
 _sedi() {
   regex=$1
   file=$2
-  sed -i.$TEMP_SUFFIX -E "$regex" "$file"
+  sed -i.$TEMP_SUFFIX "$regex" "$file"
   rm -f "$file".$TEMP_SUFFIX
 }
 
@@ -52,7 +50,22 @@ _check_status() {
 }
 
 _check_init() {
-  if [[ $(git rev-parse HEAD^1) == "$RELEASE_HASH" ]]; then
+  local _has_inited=false
+
+  if [[ ! -d .github ]]; then # using option `--no-gh`
+    _has_inited=true
+  else
+    if [[ -f .github/workflows/$ACTIONS_WORKFLOW ]]; then
+      # on BSD, the `wc` could contains blank
+      local _count
+      _count=$(find .github/workflows/ -type f -name "*.yml" | wc -l)
+      if [[ ${_count//[[:blank:]]/} == 1 ]]; then
+        _has_inited=true
+      fi
+    fi
+  fi
+
+  if $_has_inited; then
     echo "Already initialized."
     exit 0
   fi
@@ -64,46 +77,43 @@ check_env() {
   _check_init
 }
 
-reset_latest() {
-  git reset --hard "$RELEASE_HASH"
-  git clean -fd
-  git submodule update --init --recursive
+checkout_latest_release() {
+  hash=$(git log --grep="chore(release):" -1 --pretty="%H")
+  git reset --hard "$hash"
 }
 
 init_files() {
   if $_no_gh; then
     rm -rf .github
   else
-    ## Change the files of `.github/`
-    temp="$(mktemp -d)"
-    find .github/workflows -type f -name "*$ACTIONS_WORKFLOW*" -exec mv {} "$temp/$ACTIONS_WORKFLOW" \;
+    ## Change the files of `.github`
+    mv .github/workflows/starter/$ACTIONS_WORKFLOW .
     rm -rf .github && mkdir -p .github/workflows
-    mv "$temp/$ACTIONS_WORKFLOW" .github/workflows/"$ACTIONS_WORKFLOW"
-    rm -rf "$temp"
+    mv ./$ACTIONS_WORKFLOW .github/workflows/${ACTIONS_WORKFLOW}
+
+    ## Cleanup image settings in site config
+    _sedi "s/^cdn:.*/cdn:/;s/^avatar:.*/avatar:/" _config.yml
   fi
 
-  # Cleanup image settings in site config
-  _sedi "s/(^timezone:).*/\1/;s/(^.*cdn:).*/\1/;s/(^avatar:).*/\1/" _config.yml
-
   # remove the other files
-  rm -rf tools/init.sh tools/release.sh _posts/*
+  rm -rf _posts/*
 
   # build assets
   npm i && npm run build
 
-  # track the CSS/JS output
-  _sedi "/.*\/dist$/d" .gitignore
+  # track the js output
+  _sedi "/^assets.*\/dist/d" .gitignore
 }
 
 commit() {
   git add -A
   git commit -m "chore: initialize the environment" -q
-  echo -e "\n> Initialization successful!\n"
+  echo -e "\n[INFO] Initialization successful!\n"
 }
 
 main() {
   check_env
-  reset_latest
+  checkout_latest_release
   init_files
   commit
 }

@@ -2,7 +2,7 @@ name: "Style Lint"
 
 on:
   push:
-    branches: ["master", "hotfix/**"]
+    branches: ["master"]
     paths: ["_sass/**/*.scss"]
   pull_request:
     paths: ["_sass/**/*.scss"]
@@ -18,6 +18,6 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: latest
       - run: npm i
       - run: npm test

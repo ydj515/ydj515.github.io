@@ -1,6 +1,6 @@
 {
   "name": "jekyll-theme-chirpy",
-  "version": "7.1.1",
+  "version": "6.5.5",
   "description": "A minimal, responsive, and feature-rich Jekyll theme for technical writing.",
   "repository": {
     "type": "git",
@@ -8,44 +8,36 @@
   },
   "author": "Cotes Chung",
   "license": "MIT",
-  "since": 2019,
   "bugs": {
     "url": "https://github.com/cotes2020/jekyll-theme-chirpy/issues"
   },
   "homepage": "https://github.com/cotes2020/jekyll-theme-chirpy/",
   "scripts": {
-    "build": "concurrently npm:build:*",
-    "build:css": "purgecss -c purgecss.config.js",
-    "build:js": "rollup -c --bundleConfigAsCjs --environment BUILD:production",
-    "watch:js": "rollup -c --bundleConfigAsCjs -w",
-    "lint:scss": "stylelint _sass/**/*.scss",
-    "lint:fix:scss": "npm run lint:scss -- --fix",
-    "test": "npm run lint:scss",
-    "prepare": "husky"
-  },
-  "dependencies": {
-    "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3"
+    "prebuild": "npx rimraf assets/js/dist",
+    "build": "cross-env NODE_ENV=production npx rollup -c --bundleConfigAsCjs",
+    "prewatch": "npx rimraf assets/js/dist",
+    "watch": "npx rollup -c --bundleConfigAsCjs -w",
+    "test": "npx stylelint _sass/**/*.scss",
+    "fixlint": "npm run test -- --fix"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/plugin-transform-class-properties": "^7.25.4",
-    "@babel/preset-env": "^7.25.4",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
+    "@babel/core": "^7.24.4",
+    "@babel/plugin-transform-class-properties": "^7.24.1",
+    "@babel/preset-env": "^7.24.4",
+    "@commitlint/cli": "^19.2.2",
+    "@commitlint/config-conventional": "^19.2.2",
     "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "concurrently": "^9.0.1",
-    "conventional-changelog-conventionalcommits": "^8.0.0",
-    "husky": "^9.1.6",
-    "purgecss": "^6.0.0",
-    "rollup": "^4.21.3",
-    "semantic-release": "^24.1.1",
-    "stylelint": "^16.9.0",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "husky": "^9.0.11",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.15.0",
+    "rollup-plugin-license": "^3.3.1",
+    "semantic-release": "^23.0.8",
+    "stylelint": "^16.3.1",
     "stylelint-config-standard-scss": "^13.1.0"
   },
   "prettier": {
@@ -156,8 +148,8 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "bash tools/release.sh --prepare",
-          "publishCmd": "bash tools/release.sh"
+          "prepareCmd": "bash tools/release --prepare",
+          "publishCmd": "bash tools/release"
         }
       ],
       [
@@ -173,5 +165,8 @@
       ],
       "@semantic-release/github"
     ]
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }
