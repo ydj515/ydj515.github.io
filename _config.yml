@@ -19,7 +19,7 @@ title: record study # the main title
 tagline: Backend Engineer # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-  ydj515
+  ydj515 배운것을 기록합니다.
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -94,7 +94,7 @@ theme_mode: # [light | dark]
 cdn: "https://media.discordapp.net/attachments"
 
 # the avatar on sidebar, support local or CORS resources
-avatar: "/assets/img/profile/emoji.png"
+avatar: "assets/img/profile/emoji.png"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
