@@ -16,7 +16,7 @@ timezone: Asia/Seoul
 
 title: record study # the main title
 
-tagline: Backend Engineer # it will display as the sub-title
+tagline: developer # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   ydj515 배운것을 기록합니다.
@@ -91,7 +91,7 @@ theme_mode: # [light | dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-cdn: "https://media.discordapp.net/attachments"
+cdn: ""
 
 # the avatar on sidebar, support local or CORS resources
 avatar: "assets/img/profile/emoji.png"
