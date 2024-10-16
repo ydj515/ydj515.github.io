@@ -3,3 +3,6 @@
 
 ## wiki
 [Wiki][wiki]를 참조하여 작성합니다.
+
+[jekyllgit]: https://github.com/cotes2020/jekyll-theme-chirpy
+[wiki]: https://github.com/cotes2020/jekyll-theme-chirpy/wiki
