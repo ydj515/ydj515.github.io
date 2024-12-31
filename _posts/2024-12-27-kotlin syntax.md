@@ -31,7 +31,7 @@ fun ClassName.functionName(args): ReturnType {
 ```
 
 - 예시
-- 
+
 ```kotlin
 // String 확장 함수
 fun String.isPalindrome(): Boolean {
