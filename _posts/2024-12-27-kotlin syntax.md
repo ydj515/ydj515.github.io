@@ -25,6 +25,7 @@ image:
 함수형 스타일로 코드를 구성 가능하며 성공과 실패를 명확히 구분해 Result를 기반으로 작업 가능한 것이 특징입니다. onSuccess, onFailure, getOrElse 등의 함수를 연달아 쓸 수 있는 함수 체이닝이 가능하며 `try~catch`와 동일하게 동작합니다.
 
 - 구현체
+
 ```kotlin
 @InlineOnly
 @SinceKotlin("1.3")
@@ -38,6 +39,7 @@ public inline fun <R> runCatching(block: () -> R): Result<R> {
 ```
 
 - 기본 사용법
+
 ```kotlin
 val result = runCatching {
     "123".toInt()
@@ -48,6 +50,7 @@ val result = runCatching {
 }
 
 - try~catch 버전
+
 위의 코드와 아래 코드의 내용 동일
 
 ```kotlin
@@ -71,7 +74,8 @@ val result = runCatching {
 }
 ```
 
-2. runCatching은 예외를 숨기고 Result 객체로 반환하기 때문에, 디버깅 시 스택 트레이스를 명시적으로 출력하지 않으면 예외의 원인을 추적하기 어려울 수 있습니다.
+1. runCatching은 예외를 숨기고 Result 객체로 반환하기 때문에, 디버깅 시 스택 트레이스를 명시적으로 출력하지 않으면 예외의 원인을 추적하기 어려울 수 있습니다.
+
 ```kotlin
 val result = runCatching {
     throw IllegalArgumentException("Invalid argument")
