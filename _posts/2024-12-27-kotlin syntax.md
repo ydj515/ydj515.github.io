@@ -17,6 +17,86 @@ image:
 ## Basic syntax
 
 
+## type
+### Any
+
+`Any`는 Kotlin의 최상위 타입으로, 모든 클래스는 Any를 상속받습니다.
+
+- Java의 Object와 유사하지만, Kotlin에서는 모든 클래스의 루트가 됩니다.
+- 기본적으로 equals, hashCode, toString 메서드를 포함합니다.
+- null을 허용하지 않으므로, null을 다루려면 Any?로 사용해야 합니다.
+- 어떠한 자료형으로도 바뀔 수 있습니다.
+- list에서는 Int, String, Double 등의 모든 타입 원소를 받을 수 있습니다.
+- 예시
+
+```kotlin
+fun printAnyValue(value: Any) {
+    println("Value: $value, Type: ${value::class.simpleName}")
+}
+
+fun main() {
+    val intValue: Any = 42
+    val stringValue: Any = "Hello Kotlin"
+    
+    printAnyValue(intValue)     // Value: 42, Type: Int
+    printAnyValue(stringValue)  // Value: Hello Kotlin, Type: String
+
+    var testVar: Any = "abc" // string
+    println("${testVar is String}") // true
+    testVar = 1.234 // double
+    println("${testVar is Double}") // true
+    testVar = true // boolean
+    println("${testVar is Boolean}") // true
+
+    val arrayList = arrayListOf<Any>()
+    arrayList.add("abc")
+    arrayList.add(1.234)
+    arrayList.add(6)
+
+    println(arrayList.joinToString()) // abc, 1.234, 6
+}
+```
+
+### * (Star Projection)
+	
+`*`는 제네릭에서 사용되는 "스타 프로젝션"으로, 특정 타입을 명시하지 않고 "모든 타입을 대체"하는 역할을 합니다.
+
+- 제네릭 타입의 타입 파라미터를 제한하지 않으면서도 안전하게 다룰 수 있도록 합니다.
+- 읽기와 쓰기에서 사용 방식이 다릅니다.
+    - 읽기: *를 사용하면 안전하게 값을 읽을 수 있습니다.
+    - 쓰기: 타입 파라미터가 명확하지 않으므로 값을 쓸 수 없습니다.
+- 특정 타입 정보를 알 수 없는 상황에서 제네릭을 처리할 때 사용합니다.
+- list에서는 언제든지 모든 타입을 받을 수 있는 Any와 달리 한번 구체적인 타입이 정해지고 나면 해당 타입만 받을 수 있습니다.
+- 예시
+ 
+```kotlin
+fun printListItems(list: List<*>) {
+    for (item in list) {
+        println(item) // 타입이 명확하지 않아 item을 안전하게 읽을 수 있음
+    }
+}
+
+fun f(list: List<*>) {
+    if (list.isNotEmpty()) {
+        val item = list[0] // Any?로 타입 추론
+    }
+}
+
+// ArrayList가 어떤 타입으로 초기활 될지 알 수 없으므로 String, Int 타입 추가하려면 syntax error 발생
+fun errorF(list: ArrayList<*>) {
+    list.add("문자열") // error. Type mismatch. Required: Nothing , Found: String
+    list.add(1)      // error
+}
+
+fun main() {
+    val intList: List<Int> = listOf(1, 2, 3)
+    val stringList: List<String> = listOf("A", "B", "C")
+    
+    printListItems(intList)    // 출력: 1, 2, 3
+    printListItems(stringList) // 출력: A, B, C
+}
+```
+
 ## function
 ### Extension Function(확장함수)
 
