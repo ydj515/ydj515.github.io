@@ -1,6 +1,6 @@
 ---
-title: kotlin syntax
-description: kotlin syntax
+title: Mermaid JS
+description: Mermaid JS
 author: ydj515
 date: 2025-01-05 11:33:00 +0800
 categories: [mermaid, mermaid js]
