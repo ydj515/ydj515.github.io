@@ -4,7 +4,7 @@ description: JPA @Converter
 author: ydj515
 date: 2025-01-14 11:33:00 +0800
 categories: [JPA, Converter]
-tags: [JPA, Converter, java, kotlin]
+tags: [JPA, converter, java, kotlin]
 pin: true
 math: true
 mermaid: true
@@ -193,4 +193,3 @@ var price: Money
 - https://stackoverflow.com/questions/5268466/how-does-hibernate-detect-dirty-state-of-an-entity-object/5268617#5268617
 - https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#bytecode-enhancement-dirty-tracking
 - org/hibernate/collection/spi/PersistentBag.class
-- 
