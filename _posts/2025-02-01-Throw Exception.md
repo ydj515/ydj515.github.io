@@ -9,7 +9,7 @@ pin: true
 math: true
 mermaid: true
 image:
-  path: /assets/img/throwException/logo.png
+  path: /assets/img/exp/logo.png
   lqip: data:image/webp;base64,UklGRpoAAABXRUJQVlA4WAoAAAAQAAAADwAABwAAQUxQSDIAAAARL0AmbZurmr57yyIiqE8oiG0bejIYEQTgqiDA9vqnsUSI6H+oAERp2HZ65qP/VIAWAFZQOCBCAAAA8AEAnQEqEAAIAAVAfCWkAALp8sF8rgRgAP7o9FDvMCkMde9PK7euH5M1m6VWoDXf2FkP3BqV0ZYbO6NA/VFIAAAA
   alt: Optionnal.orElseThrow
 ---
@@ -42,7 +42,7 @@ String result = optional.orElseThrow(() ->
 
 Java SE 8 Optional API를 살펴보면 아래와 같습니다.
 
-![alt text](/assets/img/throwException/orElseThrow.png)
+![alt text](/assets/img/exp/orElseThrowOrigin.png)
 
 > *Return the contained value, if present, otherwise throw an exception to be created by the provided supplier.*
 
