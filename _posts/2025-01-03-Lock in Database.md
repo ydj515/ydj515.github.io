@@ -1,6 +1,6 @@
 ---
 title: Lock in database
-description: Lock in database
+description: transaction isolation level, mvcc, lock..
 author: ydj515
 date: 2024-12-27 11:33:00 +0800
 categories: [lock, mysql]

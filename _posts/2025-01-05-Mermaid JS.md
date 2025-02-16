@@ -1,6 +1,6 @@
 ---
 title: Mermaid JS
-description: Mermaid JS
+description: diagram을 git에서 그리자
 author: ydj515
 date: 2025-01-05 11:33:00 +0800
 categories: [mermaid, mermaid js]

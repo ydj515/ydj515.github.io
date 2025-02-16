@@ -1,6 +1,6 @@
 ---
 title: JPA @Converter
-description: JPA @Converter
+description: Converter는 반드시 재정의가 필요해
 author: ydj515
 date: 2025-01-14 11:33:00 +0800
 categories: [JPA, Converter]

@@ -1,6 +1,6 @@
 ---
 title: Optionnal.orElseThrow 안의 Throw?
-description: orElseThrow 안의 Throw?
+description: 평소에 생각을 잘하자
 author: ydj515
 date: 2025-02-01 11:33:00 +0800
 categories: [exception, optional]

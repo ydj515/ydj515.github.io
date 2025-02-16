@@ -1,6 +1,6 @@
 ---
 title: kotlin syntax
-description: kotlin syntax
+description: 코틀린 기본 문법
 author: ydj515
 date: 2024-12-27 11:33:00 +0800
 categories: [kotlin, syntax]

@@ -1,6 +1,6 @@
 ---
 title: Spring Assert class의 supplier?
-description: Spring Assert class의 supplier?
+description: supplier를 쓰는 이유는 성능 최적화
 author: ydj515
 date: 2025-01-29 11:33:00 +0800
 categories: [spring, assert]
