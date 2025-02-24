@@ -2,7 +2,7 @@
 title: Spring application context 순서
 description: spring application context 로딩 순서
 author: ydj515
-date: 2025-02-16 11:33:00 +0800
+date: 2025-02-22 11:33:00 +0800
 categories: [spring, applicationcontext]
 tags: [spring, springboot, applicationcontext]
 pin: true
