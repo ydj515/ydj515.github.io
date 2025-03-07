@@ -4,7 +4,7 @@ description: 평소에 생각을 잘하자
 author: ydj515
 date: 2025-02-01 11:33:00 +0800
 categories: [exception, optional]
-tags: [throw, exception, optional, java]
+tags: [throw, exception, optional, java, troubleshooting]
 pin: true
 math: true
 mermaid: true

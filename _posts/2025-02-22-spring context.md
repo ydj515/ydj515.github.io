@@ -4,7 +4,7 @@ description: spring application context 로딩 순서
 author: ydj515
 date: 2025-02-22 11:33:00 +0800
 categories: [spring, applicationcontext]
-tags: [spring, springboot, applicationcontext]
+tags: [spring, springboot, applicationcontext, troubleshooting]
 pin: true
 math: true
 mermaid: true
