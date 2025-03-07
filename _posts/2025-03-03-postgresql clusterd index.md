@@ -4,7 +4,7 @@ description: innoDB의 pk는 clustered index기 때문에
 author: ydj515
 date: 2025-03-03 11:33:00 +0800
 categories: [mysql, postgresql, database, index, clustered index]
-tags: [mysql, postgresql, rdb, database, clustered index, index]
+tags: [mysql, postgresql, rdb, database, clustered index, index, troubleshooting]
 pin: true
 math: true
 mermaid: true
