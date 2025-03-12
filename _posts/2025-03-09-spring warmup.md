@@ -30,8 +30,8 @@ Spring Boot 애플리케이션 기동 후 최초 호출 시 응답 속도가 현
 
 ## 원인 분석 
 
-> java17, springboot3.x기준으로 설명합니다.  
-> kotlin과 전체 sample은 [github-sample](https://github.com/ydj515/blog-example/tree/main/warmup-example)를 참조해주세요.
+> kotlin, springboot3.x기준으로 설명합니다.  
+> java17과 전체 sample은 [github-sample](https://github.com/ydj515/blog-example/tree/main/warmup-example)를 참조해주세요.
 
 아래와 같이 상품 리스트를 조회하는 간단한 API가 있다고 가정해봅니다.
 
