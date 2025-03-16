@@ -591,15 +591,17 @@ class SpringEventHandler(
 
 ## 결론
 
-모든 주요 API를 한 번씩 호출하는 것이 가장 좋습니다.
+Spring 애플리케이션을 기동할 때, 첫 번째 API 호출 후에 Dispatcher Servlet이 초기화되며, 이로 인해 초기 호출 시 API 응답이 느려질 수 있습니다.
 
-Controller당 대표 API 하나만 호출하면 Spring의 빈 초기화는 대부분 끝나지만, JIT 및 Hibernate 초기화까지 고려하면 모든 주요 API를 실행하는 것이 최선입니다.
+성능 최적화를 위해서는 모든 API를 한 번씩 호출하여 JIT 컴파일과 Hibernate 초기화를 하여 warmup하는 것이 가장 좋습니다.
 
-자동화하려면 PostConstruct 또는 ApplicationRunner, ApplicationReadyEvent를 받아서 에서 내부적으로 API를 호출하거나, 배포 후 curl 또는 k6 같은 툴로 warmup을 진행합니다.
+그러나 모든 API를 호출하는 것은 warmup 과정이 오래걸릴 수 있기에 자주 사용하는 API만을 warmup하여 진행해도 좋은 방법입니다.
 
-특히 실제로는 curl 또는 k6의 smoke-test로 를 통해 주요 API를 미리 호출하는 것입니다.
+이 과정을 자동화하려면, `@PostConstruct`나 `ApplicationRunner`, `ApplicationReadyEvent`를 사용하여 애플리케이션이 시작된 후 내부적으로 API를 호출하여 warmup을 진행할 수 있습니다.
 
-이렇게 하면 JIT 컴파일뿐만 아니라 실제 트래픽을 처리하기 전까지 필요한 초기화 과정도 함께 수행할 수 있습니다.
+또한, 배포 후에는 curl이나 k6와 같은 도구를 사용해 warmup 테스트를 진행하는 방법도 있습니다.
+
+특히 실제 환경에서는 curl이나 k6를 활용해 주요 API를 미리 호출함으로써 JIT 컴파일과 함께, 실제 트래픽을 처리하기 전에 필요한 모든 초기화 작업을 수행하면 성능향상을 기대할 수 있습니다.
 
 ## 번외
 
