@@ -25,7 +25,7 @@ Spring 입장에서 Enum을 어떻게 보는지 생각해보면 좋을 것 같�
 ## 왜 직접 주입할 수 없는가?
 
 > kotlin, springboot3.x기준으로 설명합니다.  
-> java와 전체 sample은 [github-sample](https://github.com/ydj515/blog-example/tree/main/runner-example)를 참조해주세요.
+> java와 전체 sample은 [github-sample](https://github.com/ydj515/blog-example/tree/main/enum-bean-example)를 참조해주세요.
 
 ### 왜냐하면 Spring이 Enum을 빈으로 관리하지 않기 때문입니다.
 
