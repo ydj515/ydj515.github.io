@@ -57,107 +57,27 @@ class ProductController(
 }
 ```
 
-이 API를 테스트 하기 위해서 springboot를 구동하고 실행시간을 측정하기 위해 출력문을 추가하였습니다.
+이 API를 테스트 하기 위해서 springboot를 구동하고 실행시간을 측정하기 위해 출력문을 추가하였습니다. 그리고 REST API 호출을 연달아 두번 진행해보고 실행시간을 확인해보았습니다.
 
-![image.png](/assets/img/warmup/before-warmup1.png)
+- 첫번째 REST API 호출
+  ![image.png](/assets/img/warmup/before-warmup1.png)
 
-그리고 2번에 호출을 진행해보고 실행시간을 확인해보았습니다.
+- 두번째 REST API 호출
+  ![image.png](/assets/img/warmup/before-warmup2.png)
 
-![image.png](/assets/img/warmup/before-warmup2.png)
-
-호출한 결과를 보면 그냥 단순히 두번 호출하였을 뿐인데 처음 요청과 응답 시간차이가 꽤나 많이 나는 것을 확인 할 수 있습니다.
+호출한 결과를 보면 그냥 단순히 두번 연달아 호출하였을 뿐인데 처음 요청과 응답 시간차이가 꽤나 많이 나는 것을 확인 할 수 있습니다.
 
 - 최초 호출: 51.397 ms
 - 이후 호출:  4.184 ms
 
-이상하리만큼 첫번째 요청은 응답이 매우 느린 것을 확인할 수 있었습니다.
-
-이유를 파악하기 위해 로그를 확인해보았습니다.
+이상하리만큼 첫번째 요청은 응답이 매우 느린 것을 확인할 수 있었습니다. 이유를 파악하기 위해 로그를 확인해보았습니다.
 
 ```java
-/Users/dongjin/Library/Java/JavaVirtualMachines/corretto-17.0.13/Contents/Home/bin/java -XX:TieredStopAtLevel=1 -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dspring.jmx.enabled=true -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true -Dmanagement.endpoints.jmx.exposure.include=* -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=51042:/Applications/IntelliJ IDEA.app/Contents/bin -Dfile.encoding=UTF-8 -classpath /Users/dongjin/dev/project/blog-example/warmup-example/build/classes/kotlin/main:/Users/dongjin/dev/project/blog-example/warmup-example/build/resources/main:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/3.4.3/87e7a401e7d249fefc7f372f5681e8620234624c/spring-boot-starter-web-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.18.2/64d2a72bacd16a9bb46db5662396dd0b606992d4/jackson-module-kotlin-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.9.25/73023c38b7b20430232893cf9b556dc8486e07a4/kotlin-reflect-1.9.25.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.9.25/f700a2f2b8f0d6d0fde48f56d894dc722fb029d7/kotlin-stdlib-1.9.25.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.4.3/29c90fec6e887dc01df09ea4c3548b5a04b7afb4/spring-boot-starter-data-jpa-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/3.4.3/7a4d63165404da67ed3802678994c21a0763723/spring-boot-starter-json-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter/3.4.3/247fdc05cd6de013c3fd26628fa221dd095b391/spring-boot-starter-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/3.4.3/40246b02bf8bf905dd5fb3d57f48bfc2c9b49bb9/spring-boot-starter-tomcat-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/6.2.3/485f6e351bba471fc8f841f39eaf6488896369ff/spring-webmvc-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/6.2.3/662ac5ee41af27d183f97032b2fec2b652d379f5/spring-web-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.18.2/deef8697b92141fb6caf7aa86966cff4eec9b04f/jackson-databind-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.18.2/985d77751ebc7fce5db115a986bc9aa82f973f4a/jackson-annotations-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-jdbc/3.4.3/87c09bd67ea27fcd30d6413fdbc5bfa1f688e5e8/spring-boot-starter-jdbc-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.hibernate.orm/hibernate-core/6.6.8.Final/2738c642d5e505249faa2f923e03541aa6b96916/hibernate-core-6.6.8.Final.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/3.4.3/7e4c0e9c14f4d971a9de6aff3c9beece2001480b/spring-data-jpa-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aspects/6.2.3/f90a794dd3f81a1addc0552bc091e3f85b2428de/spring-aspects-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.18.2/9ed6d538ebcc66864e114a7040953dce6ab6ea53/jackson-datatype-jdk8-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.18.2/7b6ff96adf421f4c6edbd694e797dd8fe434510a/jackson-datatype-jsr310-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.18.2/72960cb3277347a748911d100c3302d60e8a616a/jackson-module-parameter-names-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/3.4.3/6172c599082196b340910d67c5c790c32f10e417/spring-boot-autoconfigure-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/3.4.3/a7138bcecd59ed27660b3894a7812d65db4951e6/spring-boot-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/3.4.3/e5aee6af32c2dbcc9fb379bcd6c5e5b931db93f1/spring-boot-starter-logging-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/jakarta.annotation/jakarta.annotation-api/2.1.1/48b9bda22b091b1f48b13af03fe36db3be6e1ae3/jakarta.annotation-api-2.1.1.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/6.2.3/13ec11e345b915d7ceea37446f1b1eefdcaad62c/spring-core-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/2.3/936b36210e27320f920536f695cf1af210c44586/snakeyaml-2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/10.1.36/222960bc8895aa543e405382094c7fb118544d0d/tomcat-embed-websocket-10.1.36.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/10.1.36/3ccaa558e32e317e35d6674d65d7d9aa182e082f/tomcat-embed-core-10.1.36.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/10.1.36/4e4235a18244af30bb32d9b5a9400fb8edb3bc20/tomcat-embed-el-10.1.36.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/6.2.3/35acadc000b8aaff77e3412dd9acb51aa70c8515/spring-context-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/6.2.3/7983418fa64505d144b60826fb1352ad336c60a0/spring-aop-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/6.2.3/de660324c90e9b015886d85c746860478fa7d99c/spring-beans-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/6.2.3/bda43c7be1bb69cce2a380c2bbaf05062631d42d/spring-expression-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/io.micrometer/micrometer-observation/1.14.4/c17efe9e6695a0a849a95d0e77422516a345e779/micrometer-observation-1.14.4.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.18.2/fb64ccac5c27dca8819418eb4e443a9f496d9ee7/jackson-core-2.18.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/6.2.3/37a5f7fd424fe555a556138c8ac4f8d6dd312c19/spring-jdbc-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.zaxxer/HikariCP/5.1.0/8c96e36c14461fc436bb02b264b96ef3ca5dca8c/HikariCP-5.1.0.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/jakarta.persistence/jakarta.persistence-api/3.1.0/66901fa1c373c6aff65c13791cc11da72060a8d6/jakarta.persistence-api-3.1.0.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/jakarta.transaction/jakarta.transaction-api/2.0.1/51a520e3fae406abb84e2e1148e6746ce3f80a1a/jakarta.transaction-api-2.0.1.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/6.2.3/b99b9917702591c2ef0cfa7a9bff6bf757015437/spring-orm-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/3.4.3/2b61ff4aef4a81071ce7eaf1ec29ef9e553bf930/spring-data-commons-3.4.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/6.2.3/29c8703a756f9a41bc8e14e2aae7890658c54abf/spring-tx-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.13.0/5a02e48521624faaf5ff4d99afc88b01686af655/antlr4-runtime-4.13.0.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.16/172931663a09a1fa515567af5fbef00897d3c04/slf4j-api-2.0.16.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjweaver/1.9.22.1/bca243d0af0db4758fbae45c5f4995cb5dabb612/aspectjweaver-1.9.22.1.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.5.16/113979db51dfad6dc895b34460d7b7ff64ffe7d2/logback-classic-1.5.16.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-to-slf4j/2.24.3/da1143e2a2531ee1c2d90baa98eb50a28a39d5a7/log4j-to-slf4j-2.24.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/2.0.16/6d57da3e961daac65bcca0dd3def6cd11e48a24a/jul-to-slf4j-2.0.16.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/6.2.3/ce8bf55aa240fdeab07b3da1f462c79112a33aff/spring-jcl-6.2.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/io.micrometer/micrometer-commons/1.14.4/3664f95586514d8f9adc81a5f7a5ef9f66b65599/micrometer-commons-1.14.4.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.5.16/4f17700f046900aea2fadf115e2d67fec921f7fd/logback-core-1.5.16.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.24.3/b02c125db8b6d295adf72ae6e71af5d83bce2370/log4j-api-2.24.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.h2database/h2/2.3.232/4fcc05d966ccdb2812ae8b9a718f69226c0cf4e2/h2-2.3.232.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.6.1.Final/886afbb445b4016a37c8960a7aef6ebd769ce7e5/jboss-logging-3.6.1.Final.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/7.0.3.Final/e183c4be8bb41d12e9f19b374e00c34a0a85f439/hibernate-commons-annotations-7.0.3.Final.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/io.smallrye/jandex/3.2.0/f17ad860f62a08487b9edabde608f8ac55c62fa7/jandex-3.2.0.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.7.0/e98374da1f2143ac8e6e0a95036994bb19137a3/classmate-1.7.0.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.15.11/f61886478e0f9ee4c21d09574736f0ff45e0a46c/byte-buddy-1.15.11.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.glassfish.jaxb/jaxb-runtime/4.0.5/ca84c2a7169b5293e232b9d00d1e4e36d4c3914a/jaxb-runtime-4.0.5.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/jakarta.xml.bind/jakarta.xml.bind-api/4.0.2/6cd5a999b834b63238005b7144136379dc36cad2/jakarta.xml.bind-api-4.0.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/jakarta.inject/jakarta.inject-api/2.0.1/4c28afe1991a941d7702fe1362c365f0a8641d1e/jakarta.inject-api-2.0.1.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.glassfish.jaxb/jaxb-core/4.0.5/7b4b11ea5542eea4ad55e1080b23be436795b3/jaxb-core-4.0.5.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/jakarta.activation/jakarta.activation-api/2.1.3/fa165bd70cda600368eee31555222776a46b881f/jakarta.activation-api-2.1.3.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.eclipse.angus/angus-activation/2.0.2/41f1e0ddd157c856926ed149ab837d110955a9fc/angus-activation-2.0.2.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/org.glassfish.jaxb/txw2/4.0.5/f36a4ef12120a9bb06d766d6a0e54b144fd7ed98/txw2-4.0.5.jar:/Users/dongjin/.gradle/caches/modules-2/files-2.1/com.sun.istack/istack-commons-runtime/4.1.2/18ec117c85f3ba0ac65409136afa8e42bc74e739/istack-commons-runtime-4.1.2.jar com.example.warmupexample.WarmupExampleApplicationKt
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v3.4.3)
-
-2025-02-26T01:47:16.459+09:00  INFO 11288 --- [warmup-example] [           main] c.e.w.WarmupExampleApplicationKt         : Starting WarmupExampleApplicationKt using Java 17.0.13 with PID 11288 (/Users/dongjin/dev/project/blog-example/warmup-example/build/classes/kotlin/main started by dongjin in /Users/dongjin/dev/project/blog-example/warmup-example)
-2025-02-26T01:47:16.460+09:00  INFO 11288 --- [warmup-example] [           main] c.e.w.WarmupExampleApplicationKt         : No active profile set, falling back to 1 default profile: "default"
-2025-02-26T01:47:16.656+09:00  INFO 11288 --- [warmup-example] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-02-26T01:47:16.678+09:00  INFO 11288 --- [warmup-example] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 2 JPA repository interfaces.
-2025-02-26T01:47:16.812+09:00  INFO 11288 --- [warmup-example] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2025-02-26T01:47:16.816+09:00  INFO 11288 --- [warmup-example] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2025-02-26T01:47:16.816+09:00  INFO 11288 --- [warmup-example] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
-2025-02-26T01:47:16.828+09:00  INFO 11288 --- [warmup-example] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2025-02-26T01:47:16.829+09:00  INFO 11288 --- [warmup-example] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 355 ms
-2025-02-26T01:47:16.875+09:00  INFO 11288 --- [warmup-example] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-02-26T01:47:16.894+09:00  INFO 11288 --- [warmup-example] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.8.Final
-2025-02-26T01:47:16.904+09:00  INFO 11288 --- [warmup-example] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-02-26T01:47:16.982+09:00  INFO 11288 --- [warmup-example] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-02-26T01:47:16.990+09:00  INFO 11288 --- [warmup-example] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-02-26T01:47:17.046+09:00  INFO 11288 --- [warmup-example] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:test user=SA
-2025-02-26T01:47:17.046+09:00  INFO 11288 --- [warmup-example] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-02-26T01:47:17.065+09:00  INFO 11288 --- [warmup-example] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
-	Database driver: undefined/unknown
-	Database version: 2.3.232
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2025-02-26T01:47:17.296+09:00  INFO 11288 --- [warmup-example] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-02-26T01:47:17.300+09:00 DEBUG 11288 --- [warmup-example] [           main] org.hibernate.SQL                        : 
-    drop table if exists products cascade 
-Hibernate: 
-    drop table if exists products cascade 
-2025-02-26T01:47:17.302+09:00 DEBUG 11288 --- [warmup-example] [           main] org.hibernate.SQL                        : 
-    drop table if exists users cascade 
-Hibernate: 
-    drop table if exists users cascade 
-2025-02-26T01:47:17.303+09:00 DEBUG 11288 --- [warmup-example] [           main] org.hibernate.SQL                        : 
-    create table products (
-        price numeric(38,2),
-        id bigint generated by default as identity,
-        name varchar(255),
-        primary key (id)
-    )
-Hibernate: 
-    create table products (
-        price numeric(38,2),
-        id bigint generated by default as identity,
-        name varchar(255),
-        primary key (id)
-    )
-2025-02-26T01:47:17.306+09:00 DEBUG 11288 --- [warmup-example] [           main] org.hibernate.SQL                        : 
-    create table users (
-        id bigint generated by default as identity,
-        password varchar(255),
-        username varchar(255),
-        primary key (id)
-    )
-Hibernate: 
-    create table users (
-        id bigint generated by default as identity,
-        password varchar(255),
-        username varchar(255),
-        primary key (id)
-    )
-2025-02-26T01:47:17.308+09:00  INFO 11288 --- [warmup-example] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-02-26T01:47:17.411+09:00  WARN 11288 --- [warmup-example] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-02-26T01:47:17.487+09:00  INFO 11288 --- [warmup-example] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:test'
 2025-02-26T01:47:17.509+09:00  INFO 11288 --- [warmup-example] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
 2025-02-26T01:47:17.513+09:00  INFO 11288 --- [warmup-example] [           main] c.e.w.WarmupExampleApplicationKt         : Started WarmupExampleApplicationKt in 1.172 seconds (process running for 1.357)
 CommandLineRunner!
 ApplicationRunner!
 ApplicationReadyEvent!
-
-
-
 2025-02-26T01:47:28.036+09:00  INFO 11288 --- [warmup-example] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2025-02-26T01:47:28.036+09:00  INFO 11288 --- [warmup-example] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2025-02-26T01:47:28.037+09:00  INFO 11288 --- [warmup-example] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
@@ -177,7 +97,9 @@ Hibernate:
         products p1_0
 ```
 
-위 로그를 보면 조금 **어?** 하는 부분이 있었는데 그 부분은 초기 스프링이 `ApplicationReadyEvent` 로그가 찍히고 나서 API 요청이 처음 들어오면 dispatcherServlet이 초기화 되는 로그를 확인할 수 있었습니다.
+위 로그를 보면 조금 **어?** 하는 부분이 있었는데 그 부분은 초기 스프링이 `ApplicationReadyEvent` 로그가 찍히고 나서 첫번째 API 요청이 처음 들어왔을때 dispatcherServlet이 초기화 되는 로그를 확인할 수 있었습니다.
+
+아래에 dispatcherServlet관련 로그만 발췌했습니다.
 
 ```java
 2025-02-26T01:47:28.036+09:00  INFO 11288 --- [warmup-example] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
@@ -188,15 +110,15 @@ Hibernate:
 - [nio-8080-exec-1] -> HTTP 요청을 처리하는 **쓰레드 풀(Tomcat)**에서 실행되고 있음
 - Initializing Spring DispatcherServlet 'dispatcherServlet' -> 요청이 들어온 후 DispatcherServlet이 처음으로 초기화됨
 
-위 로그에서 알 수 있듯이, DispatcherServlet은 서버 기동 시점이 아닌 최초 요청 시에 초기화됩니다.
+위 로그에서 알 수 있듯이, **DispatcherServlet은 서버 기동 시점이 아닌 spring으로 최초 REST 요청이 들어온 시점에 초기화됩니다.**
 
-그리고 두번째 REST 요청부터는 당연하게도 dispatcherServlet이 init되었기 때문에 이과정이 필요 없어서 빠르게 동작한 것이였습니다.
+그리고 두번째 REST 요청부터는 당연하게도 dispatcherServlet이 init되었기 때문에 이과정이 필요 없어서 빠르게 동작한 것으로 예상할 수 있습니다.
 
-## 원인
+## 첫번째 REST 요청에 대한 늦은 응답의 원인
 
-spring이 기동되고 첫 REST 요청이 느린 것은 `DispatcherServlet의 기본 초기화 방식이 Lazy Initialization`이기 때문입니다.
+spring이 기동되고 첫 REST 요청이 느린 것은 `DispatcherServlet의 기본 초기화 방식이 Lazy Initialization`이라고 생각했습니다.
 
-즉, 서버가 시작될 때 바로 DispatcherServlet을 초기화하지 않고, 최초 요청이 들어왔을 때만 초기화하도록 동작합니다.
+서버가 시작될 때 바로 DispatcherServlet을 초기화하지 않고, 최초 REST 요청이 들어왔을 때만 초기화하도록 동작하는 것을 로그로 확인하였기 때문입니다.
 
 > DispatcherServlet의 역할  
 > - Spring MVC에서 모든 HTTP 요청을 처리하는 핵심 Servlet  
@@ -205,9 +127,9 @@ spring이 기동되고 첫 REST 요청이 느린 것은 `DispatcherServlet의 �
 {:.prompt-info}
 
 
-## 해결방법
+## 첫번째 REST 요청에 대한 늦은 응답을 해결하는 방법
 
-단순히 DispatcherServlet을 서버 시작 시점에 미리 초기화하기만 하면 됩니다.
+단순히 DispatcherServlet을 서버 시작 시점에 미리 초기화해본다면 충분히 시간을 줄일 수 있다는 판단하에 DispatcherServlet을 즉시 초기화하는 방법을 찾아보았습니다.
 
 서버가 뜨는 순간 DispatcherServlet을 미리 초기화하려면 Spring Boot 설정을 변경해야합니다.
 
@@ -246,33 +168,32 @@ class ServletConfig {
 }
 ```
 
+### DispatcherServlet Eager Initialization 후 테스트
 
-### DispatcherServlet eager loading 후 테스트
+위에서 언급한 설정값으로 DispatcherServlet을 Lazy Initialization하게 설정한 후 메소드 실행 속도를 비교해보았습니다.
 
-위에서 언급한 설정값으로 DispatcherServlet을 로딩 후 메소드 실행 속도를 비교해보았습니다.
+동일하게 REST 요청을 두번 연달아 진행해보았습니다.
 
-![image.png](/assets/img/warmup/before-warmup1afterload.png)
+- 첫번째 REST API 호출
+  ![image.png](/assets/img/warmup/before-warmup1afterload.png)
 
-그리고 2번에 호출을 진행해보고 실행시간을 확인해보았습니다.
-
-![image.png](/assets/img/warmup/before-warmup2afterload.png)
+- 두번째 REST API 호출
+  ![image.png](/assets/img/warmup/before-warmup2afterload.png)
 
 - 최초 호출: 50.080 ms
 - 이후 호출:  5.600 ms
 
+여러번 테스트 해본 결과 처음의 실험과 크게 다르지 않았고, 메소드 수행 속도 또한 오차범위 내에 있다고 판단이 들었습니다.
 
-여러번 테스트 해본 결과 처음의 실험과 크게 다르지 않았고, 메소드 수행 속도 또한 오차범위 내에 있다고 판단이 들었습니다. 
+이렇게 dispatcherservlet의 eager initialization을 하더라도 첫번재 REST API response latency가 개선되지않았기에 DispatcherServlet의 lazy Initialization는 크게 의미가 있지 않다는 것을 알게되었습니다.
 
-이렇게 dispatcherservlet의 eager laoding을 하더라도 첫번재 rest call latency가 개선되지않았기에 DispatcherServlet의 lazy Initialization는 크게 의미가 있지 않다는 것을 알게되었습니다.
-
-그래서 단순히 dispatcherservlet의 lazy init의 문제만이 아니라고 판단하고 스터디를 진행하던중 `Jvm warm up`이라는 키워드가 눈에 띄었습니다.
-
+그래서 단순히 dispatcherservlet의 lazy initialization의 문제만이 아니라고 판단하고 스터디를 진행하던중 `Jvm warm up`이라는 키워드가 눈에 띄었습니다.
 
 ## JVM Warmup
 
-JVM Warmup이란 애플리케이션이 실행된 직후 초기 성능이 낮다가, 점진적으로 최적화되면서 성능이 향상되는 과정을 의미합니다. 주된 이유는 JIT Compiler가 실행 중인 코드를 분석하고 최적화하는 데 시간이 걸리기 때문입니다.
+우선 JVM Warmup에 대해 설명하겠습니다. JVM Warmup이란 애플리케이션이 실행된 직후 초기 성능이 낮다가, 점진적으로 최적화되면서 성능이 향상되는 과정을 의미합니다. 주된 이유는 JIT Compiler가 실행 중인 코드를 분석하고 최적화하는 데 시간이 걸리기 때문입니다.
 
-### JVM Warmup의 원인
+### JVM Warmup 과정과 최적화
 
 바이트코드 인터프리팅: JVM은 처음에는 바이트코드를 인터프리터 방식으로 실행하여 속도가 느립니다.
 
@@ -283,7 +204,6 @@ JVM 내부 최적화: 인라이닝, 루프 최적화 등의 기법이 적용되�
 > JIT Compiler란?  
 > 실행 중인 바이트코드를 네이티브 코드로 변환하여 성능을 최적화하는 컴파일러입니다. 자세한건 아래에서 다루겠습니다.
 {:.prompt-info}
-
 
 ## JIT Compiler
 
@@ -312,7 +232,7 @@ JIT 컴파일러는 동작방식은 아래와 같습니다.
 
 위에서 설명한 대로 JVM Warmup을 정리하자면 **"JVM은 자주 실행 되는 코드를 컴파일하고 캐시하며 클래스는 필요할 때 Lazy Loading 으로 메모리에 적재된다"** 이것이 JVM Warm-up의 핵심입니다.
 
-그렇다면 spring의 첫 REST 요청의 Latency가 늦어지는 원인을 아래와 같이 정의할 수 있습니다.
+그렇다면 spring의 첫 REST 요청의 response latency가 늦어지는 원인을 아래와 같이 정의할 수 있습니다.
 
 1. dispatcher servlet의 init -> (확인 결과 미미함.)
 2. 클래스가 메모리에 적재되지 않음
@@ -363,7 +283,7 @@ class ProductController(
 
 자세하게 로그를 살펴보자면
 
-- 첫번재 요청 (처음 productFacade.getProducts() 실행)
+- 첫번재 REST 요청 (처음 productFacade.getProducts() 실행)
 
 ```java
     24971 5085       1       java.util.EventObject::<init> (24 bytes)
@@ -469,7 +389,7 @@ Hibernate:
 2025-03-07T15:33:56.941+09:00 DEBUG 28279 --- [warmup-example] [nio-8080-exec-2] o.s.orm.jpa.JpaTransactionManager        : Not closing pre-bound JPA EntityManager after transaction
 ```
 
-- 두번째 요청 (두번째 productFacade.getProducts() 실행)
+- 두번째 REST 요청 (두번째 productFacade.getProducts() 실행)
 
 ```java
     72963 5145       1       java.util.concurrent.locks.AbstractQueuedSynchronizer::acquire (20 bytes)
@@ -497,16 +417,13 @@ Hibernate:
 2025-03-07T15:34:44.429+09:00 DEBUG 28279 --- [warmup-example] [nio-8080-exec-3] o.s.orm.jpa.JpaTransactionManager        : Committing JPA transaction on EntityManager [SessionImpl(1642178553<open>)]
 2025-03-07T15:34:44.430+09:00 DEBUG 28279 --- [warmup-example] [nio-8080-exec-3] o.s.jdbc.datasource.DataSourceUtils      : Resetting read-only flag of JDBC Connection [HikariProxyConnection@1311810940 wrapping conn0: url=jdbc:h2:mem:test user=SA]
 2025-03-07T15:34:44.432+09:00 DEBUG 28279 --- [warmup-example] [nio-8080-exec-3] o.s.orm.jpa.JpaTransactionManager        : Not closing pre-bound JPA EntityManager after transaction
-
-
 ```
 
 위의 로그를 보면 첫번째 요청 시점이 들어온 시점에서 Lazy Loading 으로 메모리에 적재된다는 것을 확인할 수 있습니다.
 
 또한 두번째 요청이 오는 시점에는 이미 메모리에 적재되었기에 컴파일 관련 로그가 없다는 것을 확인 할 수 있습니다.
 
-그러나, 로그로만으로 실행된 모든 코드를 확인하기 어렵기 때문에 프로파일러 도구를 사용하는 것도 좋은 방법입니다.
-
+그러나, 로그로만으로 실행된 모든 코드를 확인하기 어렵기 때문에 프로파일러 도구를 사용하는 것도 좋아보입니다.
 
 ### JFR(Java Flight Recorder)
 
@@ -559,24 +476,30 @@ class SpringEventHandler(
 }
 ```
 
+### JVM Warmup 전과 후 테스트
+
+JVM Warmup 전과 후에 spring 기동후 한번의 REST 요청을 보내어 시간을 측정해보았습니다.
+
 - warmup 전 수행 시간(최초호출 : 51.397 ms)
-![image.png](/assets/img/warmup/before-warmup1.png)
+  ![image.png](/assets/img/warmup/before-warmup1.png)
 
 - warmup 후 수행시간(최초호출 : 1.358 ms)
-![image.png](/assets/img/warmup/after-warmup.png)
+  ![image.png](/assets/img/warmup/after-warmup.png)
 
 **warmup을 진행한 후에 메소드 수행 속도가 현저하게 빨라진 것을 확인할 수 있었습니다.**
 
+위의 테스트 결과로 **"JVM warmup을 하고 안하고는 REST 요청의 성능에 영향을 줄 수 있다."**를 알 수 있었습니다.
+
+여기서 저는 추가로 아래의 의문점이 들었습니다.
+
 > 그렇다면 controller의 하나의 API(메소드)만 수행해놓아도 충분히 warmup이 될까?
 {:.prompt-tip}
-
-라는 궁금점이 생겼습니다.
 
 "controller의 하나의 API(메소드)만 수행해놓아도 충분히 warmup이 될까?"라는 질문에 대한 답은 **"그렇지 않을 수도 있다"** 입니다.
 
 위에서 언급했듯이 JVM Warmup을 효과적으로 진행하려면 모든 **"주요"** 엔드포인트에 최소한 한 번씩 요청을 보내는 것이 가장 좋습니다.
 
-왜냐하면 **"JIT(Just-In-Time) 컴파일의 최적화 대상이 되는 코드는 실제로 실행된 코드만 포함되기 때문"** 입니다.
+왜냐하면 **"JVM은 자주 실행 되는 코드를 컴파일하고 캐시하며 클래스는 필요할 때 Lazy Loading 으로 메모리에 적재하며, JIT(Just-In-Time) 컴파일의 최적화 대상이 되는 코드는 실제로 실행된 코드만 포함되기 때문"** 입니다.
 
 그러나 너무 API가 많거나, 커버되는 영역이 큰 API, 자주 사용되는, 중요한 API에 대해서만 warmup을 진행해도 크게 성능개선을 이룰 수 있습니다.
 
