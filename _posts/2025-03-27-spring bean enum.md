@@ -2,7 +2,7 @@
 title: SpringContext에서 관리되는 빈을 Enum 클래스에 주입할 수 있는가?
 description: 개념적으로는 안되지만 우회는 할 수 있다.
 author: ydj515
-date: 2025-03-24 11:33:00 +0800
+date: 2025-03-27 11:33:00 +0800
 categories: [springboot, spring, java, enum]
 tags: [java, kotlin, spring, springboot, java, troubleshooting]
 pin: true
