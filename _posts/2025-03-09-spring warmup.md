@@ -187,7 +187,14 @@ class ServletConfig {
 
 이렇게 dispatcherservlet의 eager initialization을 하더라도 첫번재 REST API response latency가 개선되지않았기에 DispatcherServlet의 lazy Initialization는 크게 의미가 있지 않다는 것을 알게되었습니다.
 
+실험과정을 정리해보자면 아래와 같습니다.
+
+1. DispatcherServlet이 Lazy Initialization 방식으로 동작하여 최초 요청이 느리다 -> Eager Initialization을 적용
+2. 적용 후에도 초기 요청이 여전히 느림
+
 그래서 단순히 dispatcherservlet의 lazy initialization의 문제만이 아니라고 판단하고 스터디를 진행하던중 `Jvm warm up`이라는 키워드가 눈에 띄었습니다.
+
+저는 `JVM Warmup 및 JIT Compiler의 최적화 과정`에 대해 공부하고 실험해보았습니다.
 
 ## JVM Warmup
 
