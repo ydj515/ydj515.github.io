@@ -111,7 +111,7 @@ sequenceDiagram
 ## 코드 구현
 
 > kotlin, springboot3.x기준으로 설명합니다.  
-> java17과 전체 sample은 [github-sample](https://github.com/ydj515/blog-example/tree/main/warmup-example)를 참조해주세요.
+> 아래의 예시에서는 파라미터가 없는 메소드들의 warmup을 위주로 설명합니다. 파라미터가 있는 메소드들의 warmup과 전체 sample은 [github-sample](https://github.com/ydj515/blog-example/tree/main/warmup-example)를 참조해주세요.
 
 ### @Warmup 어노테이션
 
@@ -125,6 +125,36 @@ annotation class Warmup
 
 - @Warmup 어노테이션은 클래스나 메서드에 붙여 사용되며, 이 어노테이션이 붙은 클래스나 메서드는 warmup 대상으로 자동으로 스캔됩니다.
 - @Retention(AnnotationRetention.RUNTIME)을 사용하여 런타임에 어노테이션 정보를 활용할 수 있습니다.
+
+> 추가로 파라미터 있는 경우도 warmup을 하고 싶다면 아래와 같이 추가해주면 됩니다. 이 metaKey는 이후에 WarmupMetaRegistry에서 특정 파라미터를 조회하는 데 사용됩니다. 
+
+```kotlin
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Warmup(val metaKey: String = "")
+```
+
+### WarmupMetaRegistry
+
+> 이 부분은 간단한 테스트용 예시로 작성된 코드입니다. 실제 구현 시에는 여러분의 요구 사항에 맞게 적절히 수정하여 사용해야 합니다.
+{:.prompt-danger}
+
+**WarmupMetaRegistry는 metaKey에 대해 해당하는 파라미터 배열을 저장하고 있는 객체입니다.**
+
+```kotlin
+object WarmupMetaRegistry {
+    private val metaMap: Map<String, Array<Any>> = mapOf(
+        "createProduct" to arrayOf(
+            ProductCreateRequest("테스트상품", BigDecimal("1000"))
+        )
+    )
+
+    fun getArgs(metaKey: String): Array<Any>? = metaMap[metaKey]
+}
+```
+
+- metaMap은 미리 등록된 metaKey에 대응하는 파라미터를 관리합니다. 예를 들어, createProduct라는 metaKey에 대해 ProductCreateRequest 객체를 전달합니다.
+- getArgs() 메서드는 metaKey에 해당하는 파라미터들을 반환하며, metaKey가 없으면 null을 반환합니다.
 
 ### WarmupRunner
 
@@ -194,32 +224,61 @@ class WarmupScanner(private val applicationContext: ApplicationContext) {
 - scan() 메서드는 Spring Bean들을 순회하면서 @Warmup 어노테이션이 붙은 클래스와 메서드를 찾아 WarmupTarget 목록을 반환합니다.
 - 이 과정에서 메서드의 파라미터가 없는 것만 필터링하여 warmup 대상으로 추가합니다.
 
+> 추가로 파라미터 있는 경우도 warmup을 하고 싶다면 아래와 같이 추가해주면 됩니다.
+
+```kotlin
+// 메서드에 @Warmup이 붙은 경우
+for (method in targetClass.declaredMethods) {
+    val annotation = method.getAnnotation(Warmup::class.java)
+    if (annotation != null && method.parameterCount == 0) { // 파라미터 없는것만 filtering
+        method.isAccessible = true
+        warmups.add(WarmupTarget(bean, method.name) {
+            method.invoke(bean)
+        })
+    }
+
+
+    if (annotation != null) { // 파라미터 있는것만 filtering
+        val args = WarmupMetaRegistry.getArgs(annotation.metaKey)
+        if (args != null) {
+            method.isAccessible = true
+            warmups.add(WarmupTarget(bean, method.name) {
+                method.invoke(bean, *args)
+            })
+        } else {
+            println("No args found for metaKey: ${annotation.metaKey}")
+        }
+    }
+}
+```
+
 
 ### WarmupExecutor
 
 **WarmupExecutor 클래스는 Coroutine을 활용하여 warmup 메서드들을 병렬로 실행하는 역할을 합니다.**
-	
-    ```kotlin
-    class WarmupExecutor {
-        suspend fun executeWarmups(warmups: List<WarmupScanner.WarmupTarget>) = coroutineScope {
-            val jobs = warmups.map { warmup ->
-                async {
-                    val time = measureTimeMillis {
-                        try {
-                            println("Executing: ${warmup.bean::class.simpleName}.${warmup.methodName}")
-                            warmup.method()
-                            println("Success: ${warmup.methodName}")
-                        } catch (e: Exception) {
-                            println("Failed: ${warmup.methodName} - ${e.message}")
-                        }
+
+```kotlin
+class WarmupExecutor {
+    suspend fun executeWarmups(warmups: List<WarmupScanner.WarmupTarget>) = coroutineScope {
+        val jobs = warmups.map { warmup ->
+            async {
+                val time = measureTimeMillis {
+                    try {
+                        println("Executing: ${warmup.bean::class.simpleName}.${warmup.methodName}")
+                        warmup.method()
+                        println("Success: ${warmup.methodName}")
+                    } catch (e: Exception) {
+                        println("Failed: ${warmup.methodName} - ${e.message}")
                     }
-                    println("${warmup.methodName} took ${time}ms")
                 }
+                println("${warmup.methodName} took ${time}ms")
             }
-            jobs.forEach { it.await() }
         }
+        jobs.forEach { it.await() }
     }
-    ```
+}
+```
+
 - executeWarmups() 메서드는 Coroutine을 사용해 병렬로 warmup 메서드를 실행합니다. async를 활용하여 여러 메서드를 동시에 실행하여 성능을 최적화합니다.
 - 각 메서드 실행 결과와 소요 시간을 출력하여, warmup 작업의 진행 상황을 실시간으로 확인할 수 있습니다.
 
