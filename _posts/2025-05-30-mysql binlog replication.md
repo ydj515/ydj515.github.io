@@ -2,7 +2,7 @@
 title: MySQL에서 binary log와 복제
 description: MySQL에서 bin log를 저장하는 방식과 복제 과정
 author: ydj515
-date: 2025-05-18 11:33:00 +0800
+date: 2025-05-30 11:33:00 +0800
 categories: [mysql]
 tags: [replication, mysql, binlog]
 pin: true
