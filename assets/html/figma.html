@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma 단축키 Cheatsheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      kbd {
+        @apply px-1 py-0.5 bg-gray-100 text-gray-800 rounded border text-sm font-mono;
+      }
+      .collapsible-content {
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans p-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6">Figma 단축키 Cheatsheet</h1>
+
+      <input
+        type="text"
+        id="search"
+        placeholder="단축키 검색 (예: 복사, ⌘ + N)"
+        class="w-full mb-6 p-3 border border-gray-300 rounded"
+        oninput="filterShortcuts(this.value)"
+        onkeydown="handleKeyCombo(event)"
+      >
+
+      <div id="shortcut-list" class="space-y-6"></div>
+    </div>
+
+    <script>
+      const keyMap = {
+        Meta: '⌘',
+        Control: 'Ctrl',
+        Shift: '⇧',
+        Alt: 'Option'
+      };
+      let pressedKeys = new Set();
+
+      function handleKeyCombo(event) {
+        const input = document.getElementById('search');
+        if (['Meta', 'Control', 'Shift', 'Alt'].includes(event.key)) {
+          pressedKeys.add(event.key);
+          return;
+        }
+
+        if (pressedKeys.size > 0 && event.key.length === 1) {
+          event.preventDefault();
+          pressedKeys.add(event.key);
+
+          const combo = Array.from(pressedKeys)
+            .map((k) => keyMap[k] || k.toUpperCase())
+            .sort((a, b) => (keyMap[a] ? -1 : 1))
+            .join(' + ');
+
+          input.value = combo;
+          filterShortcuts(combo);
+        }
+      }
+
+      document.addEventListener('keyup', () => pressedKeys.clear());
+
+      const shortcuts = [
+        {
+          category: '기본 도구',
+          action: '프레임 만들기',
+          mac: 'A',
+          win: 'A',
+          keywords: ['frame', 'create frame']
+        },
+        {
+          category: '기본 도구',
+          action: '사각형',
+          mac: 'R',
+          win: 'R',
+          keywords: ['rectangle', 'shape']
+        },
+        {
+          category: '기본 도구',
+          action: '원',
+          mac: 'O',
+          win: 'O',
+          keywords: ['circle', 'ellipse', 'shape']
+        },
+        {
+          category: '기본 도구',
+          action: '선',
+          mac: 'L',
+          win: 'L',
+          keywords: ['line', 'draw line']
+        },
+        {
+          category: '기본 도구',
+          action: '텍스트',
+          mac: 'T',
+          win: 'T',
+          keywords: ['text', 'type', 'font']
+        },
+        {
+          category: '기본 도구',
+          action: '펜툴',
+          mac: 'P',
+          win: 'P',
+          keywords: ['pen tool', 'draw path']
+        },
+        {
+          category: '기본 도구',
+          action: '이미지 삽입',
+          mac: '⇧ + ⌘ + K',
+          win: '⇧ + Ctrl + K',
+          keywords: ['image', 'insert image', 'add image']
+        },
+
+        {
+          category: '컴포넌트',
+          action: '컴포넌트 만들기',
+          mac: '⌘ + Option + K',
+          win: 'Ctrl + Alt + K',
+          keywords: ['component', 'create component']
+        },
+        {
+          category: '컴포넌트',
+          action: '컴포넌트 분리',
+          mac: '⌘ + Option + B',
+          win: 'Ctrl + Alt + B',
+          keywords: ['component', 'detach', 'ungroup component']
+        },
+        {
+          category: '컴포넌트',
+          action: '컴포넌트 인스턴스 찾기',
+          mac: '⌘ + I',
+          win: 'Ctrl + I',
+          keywords: ['component', 'find instance']
+        },
+        {
+          category: '컴포넌트',
+          action: '라이브러리 열기',
+          mac: '⌘ + Option + O',
+          win: 'Ctrl + Alt + O',
+          keywords: ['library', 'open library', 'component library']
+        },
+
+        {
+          category: '오토레이아웃',
+          action: '오토레이아웃 추가',
+          mac: '⇧ + A',
+          win: '⇧ + A',
+          keywords: ['auto layout', 'add auto layout']
+        },
+        {
+          category: '오토레이아웃',
+          action: '간격 조절',
+          mac: 'Option + ↑/↓',
+          win: 'Alt + ↑/↓',
+          keywords: ['spacing', 'adjust spacing', 'gap']
+        },
+        {
+          category: '오토레이아웃',
+          action: '패딩 조절',
+          mac: '⌘ + Option + ↑/↓',
+          win: 'Ctrl + Alt + ↑/↓',
+          keywords: ['padding', 'adjust padding']
+        },
+
+        {
+          category: '정렬 및 그룹',
+          action: '좌측 정렬',
+          mac: 'Option + A',
+          win: 'Alt + A',
+          keywords: ['align', 'left align']
+        },
+        {
+          category: '정렬 및 그룹',
+          action: '가운데 정렬',
+          mac: 'Option + H',
+          win: 'Alt + H',
+          keywords: ['align', 'center align', 'horizontal align']
+        },
+        {
+          category: '정렬 및 그룹',
+          action: '상하 정렬',
+          mac: 'Option + W',
+          win: 'Alt + W',
+          keywords: ['align', 'vertical align', 'top bottom align']
+        },
+        {
+          category: '정렬 및 그룹',
+          action: '그룹 만들기',
+          mac: '⌘ + G',
+          win: 'Ctrl + G',
+          keywords: ['group', 'create group']
+        },
+        {
+          category: '정렬 및 그룹',
+          action: '그룹 해제',
+          mac: '⌘ + ⇧ + G',
+          win: 'Ctrl + ⇧ + G',
+          keywords: ['ungroup', 'release group']
+        },
+
+        {
+          category: '선택 및 이동',
+          action: '뒤 객체 선택',
+          mac: '⌘ + 클릭',
+          win: 'Ctrl + 클릭',
+          keywords: ['select behind', 'select under', 'layer select']
+        },
+        {
+          category: '선택 및 이동',
+          action: '다중 선택',
+          mac: '⇧ + 클릭',
+          win: '⇧ + 클릭',
+          keywords: ['multi select', 'multiple select', 'select many']
+        },
+        {
+          category: '선택 및 이동',
+          action: '한 픽셀 이동',
+          mac: '방향키',
+          win: '방향키',
+          keywords: ['move', 'nudge', '1px']
+        },
+        {
+          category: '선택 및 이동',
+          action: '10px 이동',
+          mac: '⇧ + 방향키',
+          win: '⇧ + 방향키',
+          keywords: ['move', 'nudge', '10px']
+        },
+
+        {
+          category: '뷰 및 내비게이션',
+          action: '전체 보기',
+          mac: '⇧ + 1',
+          win: '⇧ + 1',
+          keywords: ['zoom out', 'fit view', 'show all']
+        },
+        {
+          category: '뷰 및 내비게이션',
+          action: '선택 확대',
+          mac: '⇧ + 2',
+          win: '⇧ + 2',
+          keywords: ['zoom to selection', 'zoom in', 'focus on object']
+        },
+        {
+          category: '뷰 및 내비게이션',
+          action: '실제 픽셀 보기',
+          mac: '⌘ + 1',
+          win: 'Ctrl + 1',
+          keywords: ['actual pixels', 'zoom 100%', 'pixel preview']
+        },
+        {
+          category: '뷰 및 내비게이션',
+          action: '가이드 보기',
+          mac: '⌘ + G',
+          win: 'Ctrl + G',
+          keywords: ['guides', 'show guides', 'grid']
+        },
+
+        {
+          category: '내보내기 및 공유',
+          action: '내보내기',
+          mac: '⇧ + ⌘ + E',
+          win: '⇧ + Ctrl + E',
+          keywords: ['export', 'save']
+        },
+        {
+          category: '내보내기 및 공유',
+          action: '링크 복사',
+          mac: '⌘ + L',
+          win: 'Ctrl + L',
+          keywords: ['copy link', 'share link', 'url']
+        },
+        {
+          category: '내보내기 및 공유',
+          action: 'PDF로 내보내기',
+          mac: '파일 메뉴 > Export 선택',
+          win: '파일 메뉴 > Export 선택',
+          keywords: ['export pdf', 'save as pdf']
+        },
+
+        {
+          category: '기타 기능',
+          action: '단축키 보기',
+          mac: '?',
+          win: '?',
+          keywords: ['shortcuts', 'help', 'hotkeys']
+        },
+        {
+          category: '기타 기능',
+          action: '설정 열기',
+          mac: '⌘ + ,',
+          win: 'Ctrl + ,',
+          keywords: ['settings', 'preferences', 'options']
+        }
+      ];
+
+      function renderList(filtered = shortcuts) {
+        const list = document.getElementById('shortcut-list');
+        list.innerHTML = '';
+        const grouped = {};
+
+        filtered.forEach((s) => {
+          if (!grouped[s.category]) grouped[s.category] = [];
+          grouped[s.category].push(s);
+        });
+
+        Object.entries(grouped).forEach(([category, items]) => {
+          const section = document.createElement('div');
+          section.innerHTML = `<h2 class="text-xl font-semibold mb-2">${category}</h2>`;
+
+          items.forEach(({ action, mac, win }) => {
+            section.innerHTML += `
+            <div class="flex justify-between items-center bg-white rounded p-3 mb-2 shadow">
+              <div class="w-1/2">${action}</div>
+              <div class="flex gap-4 w-1/2 justify-end text-sm">
+                <div><span class="text-gray-500">Mac:</span> <kbd>${mac}</kbd></div>
+                <div><span class="text-gray-500">Win:</span> <kbd>${win}</kbd></div>
+              </div>
+            </div>
+          `;
+          });
+
+          list.appendChild(section);
+        });
+      }
+      function filterShortcuts(query) {
+        const lower = query.toLowerCase();
+        const result = shortcuts.filter(
+          (s) =>
+            s.action.toLowerCase().includes(lower) ||
+            s.category.toLowerCase().includes(lower) ||
+            s.mac.toLowerCase().includes(lower) ||
+            s.win.toLowerCase().includes(lower) ||
+            (s.keywords && s.keywords.some((k) => k.toLowerCase().includes(lower)))
+        );
+        renderList(result);
+      }
+
+      renderList();
+    </script>
+  </body>
+</html>
