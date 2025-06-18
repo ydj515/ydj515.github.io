@@ -1,6 +1,6 @@
 ---
 title: shortcut cheat sheet 만들기
-description: vercel 배포까지
+description: vercel 배포와 chrome extension 등록까지
 author: ydj515
 date: 2025-06-09 11:33:00 +0800
 categories: [shortcut]
@@ -135,9 +135,60 @@ export const allShortcuts: Shortcut[] = [
 
 또한, UI는 React + Tailwind로 구성해 빠르게 프로토타입 제작 -> 배포까지 진행했습니다.
 
+## vercel 배포
 
-## 회고 및 개선 아이디어
+- [vercel](https://vercel.com/)에 회원가입을 하고, github repository를 연동하면 끝.
 
-- 단축키를 빠르게 찾을 수 있어 팀원들이 좋아했습니다.
+### vercel analytics 추가
+
+1. `@vercel/analytics` 설치
+
+```sh
+npm install @vercel/analytics
+```
+
+2. `App.tsx`에 analytics 태그 추가
+
+```tsx
+import { Analytics } from '@vercel/analytics/react';
+
+function App() {
+
+  return (
+    <>
+      <div className="flex flex-col md:flex-row h-screen min-w-[320px]">
+      ...
+      </div>
+      <Analytics />
+    </>
+  );
+}
+
+export default App;
+```
+
+## chrome extension 등록
+
+우선 개발이 완료된 build된 프로그램을 테스트 해봅니다.
+
+1. `chrome://extensions/`에 접속
+2. 우측 상단에 `개발자 모드` 토클 클릭하여 사용
+3. 좌측 상단에 압축해제된 확장 프로그램 로드 -> `dist`폴더 선택
+
+### 크롬 웹스토어 개시
+
+1. 카드 등록후 첫 5$ 결제
+2. (크롬웹스토어개발자대시보드)[https://chrome.google.com/webstore/devconsole]에 접속해서 dist폴더를 zip해서 검수요청을 합니다.
+3. 검토가 완료될때까지 대기합니다.
+   ![image.png](/assets/img/shortcut/검토대기중.png)
+4. 검토가 종료된 후 게시가 되며 메일이 옵니다.
+   ![image.png](/assets/img/shortcut/게시됨.png)
+   ![image.png](/assets/img/shortcut/메일확인.png)
+5. 항목ID로 상세페이지에 접근해서 확인할 수 있습니다.(https://chromewebstore.google.com/detail/shortcut-cheatsheet/{항목ID})
+   ![image.png](/assets/img/shortcut/배포됨.png)
+6. 확장프로그램 추가 후 잘 동작하는 것을 확인할 수 있습니다.
+   ![image.png](/assets/img/shortcut/확장프로그램추가.png)
+
+## 회고
+
 - 현재는 단축키를 직접 입력해야 검색되지만, 자동완성 기능을 추가하면 더 편리할 듯합니다.
-- 크롬 확장 프로그램으로도 제작해볼까 고민 중입니다.
