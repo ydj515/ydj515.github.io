@@ -4,7 +4,7 @@ description: Spring PlatformTransactionManager
 author: ydj515
 date: 2025-06-01 11:33:00 +0800
 categories: [spring]
-tags: [spring, transaction, jpa, mybatis, jooq, jdbc]
+tags: [spring, transaction, jpa, mybatis, jooq, jdbc, troubleshooting]
 pin: true
 math: true
 mermaid: true

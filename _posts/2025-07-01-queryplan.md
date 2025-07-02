@@ -4,7 +4,7 @@ description: Spring Boot에서 실행계획(EXPLAIN PLAN) log로 남기기
 author: ydj515
 date: 2025-07-01 11:33:00 +0800
 categories: [query plan, springboot]
-tags: [query plan, springboot]
+tags: [query plan, springboot, troubleshooting]
 pin: true
 math: true
 mermaid: true

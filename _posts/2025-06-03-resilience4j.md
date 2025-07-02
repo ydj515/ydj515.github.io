@@ -4,7 +4,7 @@ description: Resilience4j
 author: ydj515
 date: 2025-06-03 11:33:00 +0800
 categories: [Resilience4j, java, kotlin, spring]
-tags: [Resilience4j, java, kotlin, spring]
+tags: [Resilience4j, java, kotlin, spring, troubleshooting]
 pin: true
 math: true
 mermaid: true
