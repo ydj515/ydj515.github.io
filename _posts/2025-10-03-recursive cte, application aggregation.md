@@ -3,8 +3,8 @@ title: Recursive CTE VS. Application Aggregation
 description: 댓글 트리 조회 성능 비교 및 최종 선택
 author: ydj515
 date: 2025-10-03 11:33:00 +0800
-categories: [msa, spring]
-tags: [msa, spring, kafka, pagination, troubleshooting]
+categories: [spring, cte]
+tags: [spring, kotlin, cte, troubleshooting]
 pin: true
 math: true
 mermaid: true
@@ -172,9 +172,18 @@ fun findTopCommentTreesWithAggregation(postId: Long, limit: Int): List<CommentNo
 
 ### 결과 분석
 
-우선 총 처리량에서 차이가 도드라졌습니다. CTE 적용방식이 2분 30초 기준 약 5,000건 정도 많이 처리했으며, Peak RPS 또한 50정도 높게 측정되었습니다.
+위에 k6 부하 테스트 결과를 보면 아래의 지표에서 차이가 보입니다.
 
-그리고 HTTP Latency 또한 p99 기준 CTE가 424 ms, aggregation 방식이 768로 2배 가까이 차이났습니다.
+- 처리량 (Throughput)
+   - CTE 방식은 2분 30초의 테스트 시간 동안 약 5,000건 더 많은 요청을 성공적으로 처리했습니다.
+   - Peak RPS(초당 최대 요청 수) 또한 CTE 방식이 50RPS 가량 더 높게 측정되었습니다.
+
+- 응답 시간 (Latency)
+   - p99(상위 99%) 기준 Latency가 CTE는 424ms인 반면, Aggregation 방식은 768ms로 거의 두 배에 가까운 지연 시간을 보였습니다.
+
+- 시스템 리소스 (JVM)
+   - Aggregation 방식은 10,000건의 데이터를 모두 애플리케이션 메모리로 가져와 처리해야 하므로, JVM 힙 메모리 사용량이 높게 측정되었습니다.
+   - 반면, CTE 방식은 DB가 계산을 전담하고 애플리케이션은 필터링된 최소한의 데이터만 받기 때문에, JVM이 매우 안정적인 상태를 유지했습니다.
 
 ## 방식 선택
 
