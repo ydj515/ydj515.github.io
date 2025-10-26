@@ -3,7 +3,7 @@ title: MSA와 Pagination
 description: MSA 환경에서 Pagination 구현
 author: ydj515
 date: 2025-09-22 11:33:00 +0800
-categories: [msa, spring, ]
+categories: [msa, spring]
 tags: [msa, spring, kafka, pagination, troubleshooting]
 pin: true
 math: true
