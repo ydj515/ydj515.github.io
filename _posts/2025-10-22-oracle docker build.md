@@ -1,5 +1,5 @@
 ---
-title: Oracle 19C docker build & install
+title: Oracle 19C docker build and install
 description: oracle 공식 이미지 생성
 author: ydj515
 date: 2025-10-22 11:33:00 +0800
