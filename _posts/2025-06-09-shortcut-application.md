@@ -4,7 +4,7 @@ description: vercel 배포와 chrome extension 등록까지
 author: ydj515
 date: 2025-06-09 11:33:00 +0800
 categories: [shortcut]
-tags: [shrotcut, vercel, react]
+tags: [shrotcut, vercel, react, troubleshooting]
 pin: true
 math: true
 mermaid: true
