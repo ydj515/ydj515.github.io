@@ -165,13 +165,19 @@ GRANT CREATE SESSION TO myuser;
 
 ```sql
 GRANT CREATE TABLE, CREATE VIEW, CREATE SEQUENCE, CREATE TRIGGER TO myuser;
+GRANT SELECT_CATALOG_ROLE TO myuser;
 ```
 
 - CREATE TABLE: 테이블 생성 가능
 - CREATE VIEW: 뷰 생성 가능
 - CREATE SEQUENCE: 시퀀스 생성 가능
 - CREATE TRIGGER: 트리거 생성 가능
-
+ - SELECT_CATALOG_ROLE: 데이터 딕셔너리/카탈로그 및 일부 V$ 동적 성능 뷰를 읽기 전용으로 조회 가능
+   - 스키마/오브젝트 메타데이터(DBA_/ALL_/USER_*), 세그먼트/세션/락 등 메타데이터 확인에 필요
+   - 사용자 테이블 데이터에 대한 SELECT 권한은 포함하지 않음 (해당 스키마 객체에 대한 별도 권한 필요)
+   - 개발·모니터링 도구(EXPLAIN/플랜 확인, 성능 진단 등) 사용 시 유용
+   - 보안 측면에서 “필요 시에만 최소 권한으로” 부여 권장. 더 강한 대안인 SELECT ANY DICTIONARY는 범위가 넓어 주의 필요
+   
 > 개발에 필수적인 객체를 생성할 수 있게 해줍니다. 삭제(DROP) 권한은 포함되지 않지만, 본인이 만든 객체는 삭제 가능합니다.
 {:.prompt-danger }
 
