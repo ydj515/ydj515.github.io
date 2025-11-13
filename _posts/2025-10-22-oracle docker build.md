@@ -222,3 +222,129 @@ GRANT CONNECT, RESOURCE TO myuser;
 - 인증: `user & password`
 - 사용자: `myuser`
 - 비밀번호: `mypassword`
+
+## 재기동 이슈 관련
+
+### 상황: oracle 재기동 후 외부에서 DB접속 불가
+
+`docker compose restart oracle19c` DB를 재기동 후에 기존에 사용하던 application에서 접근을 못하는 이슈가 발생했습니다.
+
+실제로 docker process는 실행되어있었으나 접근이 안된 이슈와 해결과정을 적어놨습니다.
+
+### 원인
+
+> oracle process가 떠있지만 oracle db가 아직 "다" 올라온 상태는 아니였습니다.
+
+- 리스너는 떠 있지만(The listener supports no services) DB가 서비스를 등록하지 못한 상태였습니다.
+- 인스턴스는 MOUNT까지만 올라왔습니다.
+  - (Connected to an idle instance -> ORACLE instance started. -> Database mounted.)
+
+> 정상이라면 Database opened.라는 로그가 올라와야합니다.
+{:.prompt-info}
+
+![alt text](/assets/img/oracle/troubleshooting/step0-log.png)
+
+**검색을 해보니 "PDB(ORCLPDB1)는 MOUNTED -> READ WRITE로 별도 열어야한다."였습니다.**
+
+실제로 도너 컨테이너에 진입후 PDB가 오픈된 상태인지 확인해보았습니다.
+
+아래의 명령어로 PDB는 OPEN가 아니라 MOUNTED 상태였습니다.
+```sh
+# 1) 컨테이너 셸 진입
+docker compose exec <서비스이름> bash   # 예: oracle19c
+
+# 2) SYSDBA 로그인
+sqlplus / as sysdba
+
+-- 상태 확인
+SELECT INSTANCE_NAME, STATUS FROM v$instance;   -- OPEN이면 정상
+SELECT NAME, OPEN_MODE FROM v$database;
+```
+
+![alt text](/assets/img/oracle/troubleshooting/step1.png)
+
+### 해결방법
+
+아래 순서로 CDB/PDB를 OPEN하고, 리스너에 서비스 등록하였습니다.
+
+
+```sh
+-- 3) CDB 열기 (MOUNTED인 경우)
+ALTER DATABASE OPEN;
+
+-- 4) PDB 확인 및 오픈
+SHOW PDBS;
+ALTER PLUGGABLE DATABASE ORCLPDB1 OPEN;  -- 여러 개면 ALL OPEN
+
+-- 5) 재기동 시 자동 OPEN 유지(1회만)
+ALTER PLUGGABLE DATABASE ORCLPDB1 SAVE STATE;
+
+-- 6) 리스너에 서비스 즉시 등록
+ALTER SYSTEM REGISTER;
+```
+
+![alt text](/assets/img/oracle/troubleshooting/step2.png)
+
+
+그 다음 컨테이너 셀에서 명령어로 리스너의 상태를 확인합니다.
+
+```sh
+-- 7) 외부에서 확인
+# 컨테이너 셸
+lsnrctl status
+```
+
+![alt text](/assets/img/oracle/troubleshooting/step3.png)
+
+### 예방법
+
+Docker Compose healthcheck로 의존 서비스가 “완전히 OPEN”된 후 올라오게 설정하여 자동으로 OPEN되게 할 수 있게 조치하였습니다.
+
+```yml
+healthcheck:
+  test: ["CMD-SHELL", "echo \"select open_mode from v\\$pdbs where name='ORCLPDB1';\" | sqlplus -s / as sysdba | grep 'READ WRITE'"]
+  interval: 30s
+  timeout: 5s
+  retries: 20
+```
+
+### 왜 default는 자동 OPEN이 아닐까?
+
+그러면 왜 default 동작은 자동 OPEN이 아닐까에 대해 찾아보았습니다.
+
+> 오라클 멀티테넌트( CDB/PDB ) 설계에서 PDB는 독립 DB로 취급됩니다. 재기동 시 자동으로 전부 OPEN하면 안전하지 않은 경우가 많기 때문에 기본은 수동 OPEN입니다.
+
+1.	운영 통제(명시적 opt-in) : 어떤 PDB를 서비스로 올릴지 관리자가 결정해야 합니다. 재부팅만으로 모든 업무 DB가 외부에 노출되면 위험합니다.
+2.	자원·기동 시간 : PDB가 OPEN되면 SGA/PGA 사용이 증가하고 스케줄러 잡, 통계/백그라운드 작업이 돌기 시작합니다. PDB가 많을수록 기동 시간이 길어지고 메모리 소모가 큽니다.
+3.	유지보수/복구 시나리오 : 패치, 클론, 백업/복구, Data Guard 스탠바이 전환 등 많은 작업이 PDB를 MOUNT 상태로 요구합니다. 기본 자동 OPEN이면 이런 작업이 방해됩니다.
+4.	RAC/서비스 정책 : 여러 인스턴스(RAC)에서 어느 인스턴스에 어떤 PDB를 열지는 서비스 정책의 영역입니다. 기본 수동이 정책 충돌을 방지합니다.
+5.	역사적/호환성 배경 : 12.1에는 상태 영구화가 없어 자동 오픈을 원하면 DB 트리거가 필요했습니다. 12.2+에 ALTER PLUGGABLE DATABASE … SAVE STATE가 도입되어도 **기본값은 여전히 수동(Open 아님)**으로 유지되어, 관리자가 의도적으로 자동 오픈을 설정하게끔 했습니다.
+
+그래서 기본동작은 "모든 PDB를 자동으로 켜지 않는다".이고, 필요하면 한 번만 OPEN 후 SAVE STATE로 명시적으로 자동 오픈을 켭니다.
+
+### 멀티테넌트(Multitenant)란?
+위에서 언급한 멀티테넌트란 한 개의 물리적 DB 인스턴스 안에 **여러 개의 "논리 DB"**를 담아 운영하는 오라클 12c+ 아키텍처입니다.
+
+- 구성 요소:
+  - CDB(Container Database): 껍데기/공용 컨테이너. `CDB$ROOT, 템플릿인 PDB$SEED` 포함.
+  - PDB(Pluggable Database): 실제 업무가 올라가는 개별 DB(스키마/사용자/데이터 분리). 필요하면 여러 개.
+- 이점:
+  - DB 통합(컨솔리데이션), 빠른 클론/리프레시, PDB 단위 시작/정지, 리소스/보안 분리 등.
+- 특징:
+  - 인스턴스가 올라가도 PDB는 기본값이 자동 OPEN 아님 -> MOUNTED로만 떠 있음 -> 필요하면 `ALTER PLUGGABLE DATABASE <PDB> OPEN; + SAVE STATE`
+
+### 그러면 서비스에 등록하는건 누가할까?
+
+그러면 오라클에서 자동 OPEN이 안되는 이유는 찾았고, OPEN이 되면 PMON이 서비스를 등록합니다.
+
+> PMON이란?  
+> PMON(Process Monitor) 은 백그라운드로 리스너에 서비스를 동적 등록하는오라클 백그라운드 프로세스입니다. 따라서 PDB가 아직 OPEN 전이면 등록할 서비스가 없으니 lsnrctl status에 안 보이는 게 정상입니다.  
+> OPEN 후 즉시 반영하고 싶으면 `ALTER SYSTEM REGISTER;`를 통해 리스너에 즉시 재등록하면됩니다.
+{:.prompt-info}
+
+그래서 OPEN후 `ALTER SYSTEM REGISTER;`으로 리스너에 재등록하면 외부에서 접근이 되는 것입니다.
+
+요약하자면
+
+> - CDB = 빌딩, PDB = 각 세대(아파트), Listener = 경비/리셉션, PMON = 관리실 직원("지금 열려있는 세대 목록"을 리셉션에 알려줌)  
+> - 빌딩이 켜져도(인스턴스 시작) 세대 문(PDB)은 기본적으로 닫혀있습니다(MOUNTED). 문을 열어야(OPEN) 리셉션 목록(리스너 서비스)에 올라와서 접속 가능한 것입니다.
