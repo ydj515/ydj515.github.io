@@ -7,47 +7,46 @@
 [Wiki][wiki]를 참조하여 작성합니다.
 
 ## prerequisite
-- ruby 3.1.6
+- mise
+- ruby 3.1.6 (managed by `mise.toml`)
 
 ## install ruby
-The installation process below applies to ARM arch Mac OS (m4)
+The installation process below applies to ARM arch Mac OS.
 
-1. rbenv install
-    
+1. install mise
+
+    ```s
+    brew install mise
+    ```
+
+2. add mise activation in `~/.zshrc`
+
     ```sh
-    brew install rbenv ruby-build
-    rbenv install -l # find available install versions
-    ```
-
-2. install ruby & rehash
-   
-   ```sh
-    rbenv install 3.1.6
-    rbenv global 3.1.6
-    rbenv rehash
-   ```
-
-3. add rbenv path in `~/.zshrc`
-
-    - `~/.zshrc` 
-    ```
-    export PATH={$Home}/.rbenv/bin:$PATH && \
-    eval "$(rbenv init -)"
-    ```
-
-    - adjust
-    ```sh
+    echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
     source ~/.zshrc
     ```
 
-4. bundle install
+3. trust project config and install ruby
+
+   ```sh
+    mise trust
+    mise install
+   ```
+
+4. install bundler dependencies
 
     ```sh
     gem install bundler
-    bundler install
+    bundle install
     ```
 
 ## start
+```sh
+mise run start
+```
+
+or
+
 ```sh
 bundle exec jekyll serve
 ```
