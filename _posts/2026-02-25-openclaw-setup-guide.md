@@ -4,7 +4,7 @@ description: Discord, OpenClaw, Local MCP를 연동하여 매일 아침 날씨�
 author: ydj515
 date: 2026-02-25 14:30:00 +0900
 categories: [AI, Automation]
-tags: [OpenClaw, MCP, Discord, Cron, NodeJS]
+tags: [OpenClaw, MCP, Discord, Cron, NodeJS, troubleshooting]
 pin: true
 math: true
 mermaid: true

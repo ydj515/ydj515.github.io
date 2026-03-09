@@ -4,7 +4,7 @@ description: warmup 과정 개선
 author: ydj515
 date: 2025-04-14 11:33:00 +0800
 categories: [springboot, spring, jvm, warmup]
-tags: [k6, java, kotlin, spring, springboot, warmpup, jvm, load_test, troubleshooting]
+tags: [k6, java, kotlin, spring, springboot, warmpup, jvm, load-test, troubleshooting]
 pin: true
 math: true
 mermaid: true
