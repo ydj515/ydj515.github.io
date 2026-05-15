@@ -373,6 +373,11 @@ PR #1595는 maintainer의 approve를 받은 뒤 squash merge되었습니다.
 
 이후 `Fixes #1434`에 의해 Issue #1434도 함께 close되었습니다.
 
+**1.2.0 release note**에 fix된 내용이 반영되었습니다.  
+<https://github.com/agentgateway/agentgateway/releases/tag/v1.2.0-alpha.1>
+
+![v1.2.0-alpha.1 release note](/assets/img/agentgateway/release-note.png)
+
 흐름을 날짜 기준으로 정리하면 다음과 같습니다.
 
 | 날짜 | 작업 |
