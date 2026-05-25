@@ -314,7 +314,7 @@ conn.close()
 
 ![alt text](/assets/img/faker/data.png)
 
-## 결론
+## 정리
 
 `faker`는 다양한 유형의 가짜 데이터를 생성하는 강력한 라이브러리입니다.
 
@@ -322,7 +322,8 @@ conn.close()
 
 이러한 특성으로 데이터베이스, JSON, Django 모델 등 다양한 환경에서 활용할 수 있습니다.
 
-[출처]
-- https://pypi.org/project/Faker/
-- https://github.com/joke2k/faker
-- https://faker.readthedocs.io/en/master/index.html
+## 출처
+
+- [https://pypi.org/project/Faker/](https://pypi.org/project/Faker/)
+- [https://github.com/joke2k/faker](https://github.com/joke2k/faker)
+- [https://faker.readthedocs.io/en/master/index.html](https://faker.readthedocs.io/en/master/index.html)

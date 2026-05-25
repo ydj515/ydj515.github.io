@@ -151,8 +151,13 @@ JAVA_OPTS="$JAVA_OPTS -javaagent:./opentelemetry-javaagent.jar"
 JAVA_OPTS="$JAVA_OPTS -Dotel.service.name=jboss-app"
 JAVA_OPTS="$JAVA_OPTS -Dotel.traces.exporter=otlp"
 JAVA_OPTS="$JAVA_OPTS -Dotel.exporter.jaeger.endpoint=http://localhost:4318"
+```
 
+## 정리
 
-[출처]
-- https://opentelemetry.io/docs/zero-code/java/agent/getting-started/
-- https://prometheus.github.io/jmx_exporter/
+Tomcat 메트릭 수집은 결국 JVM 에이전트와 exporter 설정을 각 실행 환경에 어떻게 일관되게 주입할지의 문제로 정리됩니다. 실행 방식은 조금씩 달라도, 핵심은 동일한 추적 설정과 노출 경로를 안정적으로 유지하는 것입니다.
+
+## 출처
+
+- [https://opentelemetry.io/docs/zero-code/java/agent/getting-started/](https://opentelemetry.io/docs/zero-code/java/agent/getting-started/)
+- [https://prometheus.github.io/jmx_exporter/](https://prometheus.github.io/jmx_exporter/)

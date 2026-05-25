@@ -125,5 +125,10 @@ Assert.notNull(name, "not found " + id);
 Assert.notNull(name, () -> "not found " + id);
 ```
 
-[출처]  
-- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html
+## 정리
+
+Spring `Assert`가 `Supplier<String>`을 받는 이유는 예외가 실제로 발생할 때만 메시지를 만들어 불필요한 문자열 연산을 줄이기 위해서입니다. 검증이 자주 호출되는 경로일수록 이런 지연 평가 방식이 작지만 의미 있는 비용 절감으로 이어질 수 있습니다.
+
+## 출처
+
+- [https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html)

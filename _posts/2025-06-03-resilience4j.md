@@ -385,7 +385,7 @@ public class Resilience4jService {
 | 통합성   | Spring, Reactor, RxJava와 통합 용이 |
 | 모니터링 | 메트릭 노출 및 시각화 지원          |
 
+## 출처
 
-[출처]
-- https://resilience4j.readme.io/
-- https://github.com/resilience4j/resilience4j
+- [https://resilience4j.readme.io/](https://resilience4j.readme.io/)
+- [https://github.com/resilience4j/resilience4j](https://github.com/resilience4j/resilience4j)

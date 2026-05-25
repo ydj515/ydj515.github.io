@@ -82,11 +82,13 @@ String result = optional.orElseThrow(() -> {
 });
 ```
 
-## 결론
+## 정리
+
 -` orElseThrow(() -> { throw new Exception(); })`는 컴파일러가 허용하는 정상적인 코드
 - 하지만 `orElseThrow(() -> new Exception())`가 더 깔끔하고 가독성이 좋음
 - `throw` 이후 실행될 코드가 있으면 컴파일 오류가 발생
 - `throw`는 특별한 연산이기 때문에 람다의 반환 타입을 신경 쓰지 않아도 됨
 
-[출처]  
-- https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElseThrow-java.util.function.Supplier-
+## 출처
+
+- [https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElseThrow-java.util.function.Supplier-](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElseThrow-java.util.function.Supplier-)

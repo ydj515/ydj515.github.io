@@ -519,22 +519,6 @@ JVM Warmup 전과 후에 spring 기동후 한번의 REST 요청을 보내어 시
 		- 첫 번째 쿼리 실행 시 Hibernate가 Lazy Loading을 적용하면, 특정 엔드포인트에서는 DB 조회가 처음 실행될 때 지연이 발생할 수 있음.
 
 
-## 결론
-
-Spring 애플리케이션을 기동할 때, 첫 번째 API 호출 후에 Dispatcher Servlet이 초기화되며, 이로 인해 초기 호출 시 API 응답이 느려질 수 있습니다.
-
-성능 최적화를 위해서는 모든 API를 한 번씩 호출하여 JIT 컴파일과 Hibernate 초기화를 하여 warmup하는 것이 가장 좋습니다.
-
-그러나 모든 API를 호출하는 것은 warmup 과정이 오래걸릴 수 있기에 자주 사용하는 API만을 warmup하여 진행해도 좋은 방법입니다.
-
-이 과정을 자동화하려면, `@PostConstruct`나 `ApplicationRunner`, `ApplicationReadyEvent`를 사용하여 애플리케이션이 시작된 후 내부적으로 API를 호출하여 warmup을 진행할 수 있습니다.
-
-또한, 배포 후에는 curl이나 k6와 같은 도구를 사용해 warmup 테스트를 진행하는 방법도 있습니다.
-
-특히 실제 환경에서는 curl이나 k6를 활용해 주요 API를 미리 호출함으로써 JIT 컴파일과 함께, 실제 트래픽을 처리하기 전에 필요한 모든 초기화 작업을 수행하면 성능향상을 기대할 수 있습니다.
-
-> [다음 글](https://ydj515.github.io/posts/spring-warmup(2)/)에서는 위의 jvm warmup 을 개선과정을 소개합니다.
-
 ## 번외
 
 curl로 호출을 해보면 다음과 같은 결과를 볼 수 있습니다.
@@ -554,8 +538,24 @@ curl -o /dev/null -s -w "Time Total: %{time_total}s\n" http://localhost:8080/pro
 | -w            | 원하는 응답 메트릭 출력                  |
 | %{time_total} | 요청~응답 완료까지 걸린 총 시간(초 단위) |
 
+## 정리
 
-[출처]
-- https://www.youtube.com/watch?v=CQi3SS2YspY
-- https://engineering.linecorp.com/ko/blog/apply-warm-up-in-spring-boot-and-kubernetes
-- https://www.baeldung.com/java-jvm-warmup
+Spring 애플리케이션을 기동할 때, 첫 번째 API 호출 후에 Dispatcher Servlet이 초기화되며, 이로 인해 초기 호출 시 API 응답이 느려질 수 있습니다.
+
+성능 최적화를 위해서는 모든 API를 한 번씩 호출하여 JIT 컴파일과 Hibernate 초기화를 하여 warmup하는 것이 가장 좋습니다.
+
+그러나 모든 API를 호출하는 것은 warmup 과정이 오래걸릴 수 있기에 자주 사용하는 API만을 warmup하여 진행해도 좋은 방법입니다.
+
+이 과정을 자동화하려면, `@PostConstruct`나 `ApplicationRunner`, `ApplicationReadyEvent`를 사용하여 애플리케이션이 시작된 후 내부적으로 API를 호출하여 warmup을 진행할 수 있습니다.
+
+또한, 배포 후에는 curl이나 k6와 같은 도구를 사용해 warmup 테스트를 진행하는 방법도 있습니다.
+
+특히 실제 환경에서는 curl이나 k6를 활용해 주요 API를 미리 호출함으로써 JIT 컴파일과 함께, 실제 트래픽을 처리하기 전에 필요한 모든 초기화 작업을 수행하면 성능향상을 기대할 수 있습니다.
+
+> [다음 글](https://ydj515.github.io/posts/spring-warmup(2)/)에서는 위의 jvm warmup 을 개선과정을 소개합니다.
+
+## 출처
+
+- [https://www.youtube.com/watch?v=CQi3SS2YspY](https://www.youtube.com/watch?v=CQi3SS2YspY)
+- [https://engineering.linecorp.com/ko/blog/apply-warm-up-in-spring-boot-and-kubernetes](https://engineering.linecorp.com/ko/blog/apply-warm-up-in-spring-boot-and-kubernetes)
+- [https://www.baeldung.com/java-jvm-warmup](https://www.baeldung.com/java-jvm-warmup)

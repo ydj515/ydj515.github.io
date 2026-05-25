@@ -39,9 +39,14 @@ image:
 
 문법 오류를 넘어선 코드의 문맥에 대한 리뷰 코멘트를 생성한다는 점이 차이가 있습니다.
 
-[출처]
-- https://www.coderabbit.ai/
-- https://docs.coderabbit.ai/getting-started/quickstart
-- https://github.com/coderabbitai
-- https://github.com/coderabbitai/ai-pr-reviewer
-- https://tech.inflab.com/20250303-introduce-coderabbit/
+## 정리
+
+CodeRabbit은 단순 정적 분석을 넘어 변경 맥락을 읽고 리뷰 피드백을 생성한다는 점이 핵심입니다. 팀 규칙과 리뷰 문화를 자동화하려는 목적이라면 유용하지만, 정적 분석 도구를 대체한다기보다 보완하는 도구로 보는 편이 더 현실적입니다.
+
+## 출처
+
+- [https://www.coderabbit.ai/](https://www.coderabbit.ai/)
+- [https://docs.coderabbit.ai/getting-started/quickstart](https://docs.coderabbit.ai/getting-started/quickstart)
+- [https://github.com/coderabbitai](https://github.com/coderabbitai)
+- [https://github.com/coderabbitai/ai-pr-reviewer](https://github.com/coderabbitai/ai-pr-reviewer)
+- [https://tech.inflab.com/20250303-introduce-coderabbit/](https://tech.inflab.com/20250303-introduce-coderabbit/)

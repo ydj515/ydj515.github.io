@@ -254,6 +254,10 @@ val result = runCatching {
 println(result) // 실패 원인을 알기 어려움
 ```
 
-[참고]
+## 정리
 
-https://kotlinlang.org/docs/basic-syntax.html
+Kotlin의 문법 편의 기능은 코드를 간결하게 만들어주지만, `runCatching`처럼 예외 흐름을 감싸는 기능은 의도를 분명히 써야 합니다. 표현식을 줄이는 것만큼이나 실패 원인을 얼마나 명확하게 드러낼 수 있는지도 함께 고려하는 것이 중요합니다.
+
+## 출처
+
+- [https://kotlinlang.org/docs/basic-syntax.html](https://kotlinlang.org/docs/basic-syntax.html)

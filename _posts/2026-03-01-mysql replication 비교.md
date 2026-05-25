@@ -740,25 +740,19 @@ MySQL 8에서 공식 스택을 강하게 가져가고 싶다면 `InnoDB Cluster`
 정리하면 `MariaDB -> Galera`, `MySQL 8 -> InnoDB Cluster` 라는 흐름은 분명 존재합니다.  
 다만 대부분의 팀에게 더 중요한 것은 멀티 라이터 자체가 아니라, **예측 가능하고 운영 가능한 HA를 만드는 것**입니다.
 
-## 참고 자료
+## 정리
 
-- MySQL 공식 문서의 Semi-Synchronous Replication
-  - <https://dev.mysql.com/doc/refman/8.4/en/replication-semisync.html>
-- MySQL 공식 문서의 Group Replication
-  - <https://dev.mysql.com/doc/refman/8.4/en/group-replication.html>
-- MySQL 공식 문서의 InnoDB Cluster
-  - <https://dev.mysql.com/doc/mysql-shell/8.4/en/mysql-innodb-cluster-introduction.html>
-- MariaDB 공식 문서의 Galera Cluster
-  - <https://mariadb.com/docs/galera-cluster/>
-- MariaDB Enterprise Platform의 High Availability
-  - <https://mariadb.com/docs/server/architecture/high-availability/>
-- AWS 공식 문서의 RDS Multi-AZ
-  - <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html>
-- AWS 공식 문서의 Aurora failover
-  - <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html>
-- GitHub `orchestrator` 프로젝트 아카이브 공지
-  - <https://github.com/openark/orchestrator>
-- Percona Orchestrator 저장소
-  - <https://github.com/percona/orchestrator>
-- mysql-mmm 프로젝트 사이트
-  - <http://mysql-mmm.org/>
+복제 전략은 기술 이름보다 데이터 유실 허용치와 쓰기 지연, 운영 복잡도를 어떻게 균형 잡을지의 문제입니다. 대부분의 팀은 단일 Primary 기반 Async + 선택적 Semi-Sync로 시작하고, MySQL 8 공식 스택이면 InnoDB Cluster, MariaDB 계열이면 Galera Cluster를 검토하는 흐름이 현실적입니다.
+
+## 출처
+
+- [MySQL 공식 문서의 Semi-Synchronous Replication](https://dev.mysql.com/doc/refman/8.4/en/replication-semisync.html)
+- [MySQL 공식 문서의 Group Replication](https://dev.mysql.com/doc/refman/8.4/en/group-replication.html)
+- [MySQL 공식 문서의 InnoDB Cluster](https://dev.mysql.com/doc/mysql-shell/8.4/en/mysql-innodb-cluster-introduction.html)
+- [MariaDB 공식 문서의 Galera Cluster](https://mariadb.com/docs/galera-cluster/)
+- [MariaDB Enterprise Platform의 High Availability](https://mariadb.com/docs/server/architecture/high-availability/)
+- [AWS 공식 문서의 RDS Multi-AZ](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html)
+- [AWS 공식 문서의 Aurora failover](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html)
+- [GitHub `orchestrator` 프로젝트 아카이브 공지](https://github.com/openark/orchestrator)
+- [Percona Orchestrator 저장소](https://github.com/percona/orchestrator)
+- [mysql-mmm 프로젝트 사이트](http://mysql-mmm.org/)

@@ -477,15 +477,10 @@ Spring Boot 3.4에서 `@MockBean` 이 deprecated 된 이유는 단순히 더 예
 Spring이 나아가는 방향도 분명합니다.  
 **테스트 편의 기능을 Boot의 개별 마법으로 두기보다, Framework 차원의 공통 모델로 끌어올리고 있다**는 점입니다.
 
-## 참고 자료
+## 출처
 
-- Spring Boot 3.4 Release Notes
-  - <https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.4-Release-Notes>
-- Spring Boot 3.4 `@MockBean` Javadoc
-  - <https://docs.spring.io/spring-boot/3.4/api/java/org/springframework/boot/test/mock/mockito/MockBean.html>
-- Spring Framework Reference: Bean Overriding in Tests
-  - <https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/bean-overriding.html>
-- Spring Framework Reference: `@MockitoBean` and `@MockitoSpyBean`
-  - <https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-mockitobean.html>
-- Spring Framework Javadoc: `@MockitoBean`
-  - <https://docs.spring.io/spring-framework/docs/6.2.x/javadoc-api/org/springframework/test/context/bean/override/mockito/MockitoBean.html>
+- [Spring Boot 3.4 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.4-Release-Notes)
+- [Spring Boot 3.4 `@MockBean` Javadoc](https://docs.spring.io/spring-boot/3.4/api/java/org/springframework/boot/test/mock/mockito/MockBean.html)
+- [Spring Framework Reference: Bean Overriding in Tests](https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/bean-overriding.html)
+- [Spring Framework Reference: `@MockitoBean` and `@MockitoSpyBean`](https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-mockitobean.html)
+- [Spring Framework Javadoc: `@MockitoBean`](https://docs.spring.io/spring-framework/docs/6.2.x/javadoc-api/org/springframework/test/context/bean/override/mockito/MockitoBean.html)

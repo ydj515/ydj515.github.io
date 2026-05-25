@@ -173,10 +173,13 @@ println(result1) // [2, 4, 6, 8, 10]
 println(result2) // [6, 8, 10]
 ```
 
+## 정리
 
+Sequence는 지연 연산 덕분에 큰 데이터 파이프라인에서 중간 컬렉션 생성을 줄여줄 수 있습니다. 하지만 데이터가 작거나 최종 연산이 반복되는 경우에는 오히려 오버헤드가 될 수 있으므로, 무조건적인 최적화 수단으로 보기보다는 데이터 흐름에 맞춰 선택하는 편이 좋습니다.
 
-[출처]
-- https://kotlinlang.org/docs/sequences.html
-- https://kotlinlang.org/docs/inline-functions.html
-- https://juhi.tistory.com/84
+## 출처
+
+- [https://kotlinlang.org/docs/sequences.html](https://kotlinlang.org/docs/sequences.html)
+- [https://kotlinlang.org/docs/inline-functions.html](https://kotlinlang.org/docs/inline-functions.html)
+- [https://juhi.tistory.com/84](https://juhi.tistory.com/84)
 - Kotlin in action

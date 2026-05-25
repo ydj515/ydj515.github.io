@@ -175,6 +175,11 @@ rate(apache_accesses_total[1m]) # 초당 요청 수(rps)
 rate(apache_sent_kilobytes_total[1m]) * 1024 # 초당 전송 바이트
 rate(apache_duration_ms_total[1m]) / rate(apache_accesses_total[1m]) # 평균 응답 시간
 
-[출처]
-- https://github.com/open-telemetry/opentelemetry-cpp-contrib/tree/main/instrumentation/otel-webserver-module
-- https://github.com/Lusitaniae/apache_exporter
+## 정리
+
+Apache exporter 메트릭은 요청량, 응답 시간, 워커 상태처럼 운영에 바로 필요한 신호를 제공합니다. 원시 메트릭을 그대로 보는 것보다 `rate()` 같은 파생 지표로 RPS와 평균 응답 시간을 계산해 해석하는 것이 실무적으로 더 중요합니다.
+
+## 출처
+
+- [https://github.com/open-telemetry/opentelemetry-cpp-contrib/tree/main/instrumentation/otel-webserver-module](https://github.com/open-telemetry/opentelemetry-cpp-contrib/tree/main/instrumentation/otel-webserver-module)
+- [https://github.com/Lusitaniae/apache_exporter](https://github.com/Lusitaniae/apache_exporter)

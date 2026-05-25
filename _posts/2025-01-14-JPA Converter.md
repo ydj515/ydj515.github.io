@@ -188,8 +188,13 @@ var price: Money
 > 쿼리에서 직접 조건을 걸어야 한다면(값 비교가 필요하다면 ) @Embeddable, 변환이 필요하면 @Converter를 사용
 {:.prompt-info}
 
-[출처]  
-- https://www.baeldung.com/jpa-attribute-converters
-- https://stackoverflow.com/questions/5268466/how-does-hibernate-detect-dirty-state-of-an-entity-object/5268617#5268617
-- https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#bytecode-enhancement-dirty-tracking
+## 정리
+
+JPA의 `@Converter`는 값 객체를 저장 가능한 형태로 변환할 때 유용하고, `@Embeddable`은 컬럼 단위 조회와 조합이 필요할 때 더 적합합니다. 결국 변환 편의성과 쿼리 가능성 중 무엇이 더 중요한지에 따라 선택하는 것이 핵심입니다.
+
+## 출처
+
+- [https://www.baeldung.com/jpa-attribute-converters](https://www.baeldung.com/jpa-attribute-converters)
+- [https://stackoverflow.com/questions/5268466/how-does-hibernate-detect-dirty-state-of-an-entity-object/5268617#5268617](https://stackoverflow.com/questions/5268466/how-does-hibernate-detect-dirty-state-of-an-entity-object/5268617#5268617)
+- [https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#bytecode-enhancement-dirty-tracking](https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#bytecode-enhancement-dirty-tracking)
 - org/hibernate/collection/spi/PersistentBag.class
