@@ -24,3 +24,9 @@ package-lock.json
 # Playwright MCP cache
 .playwright-mcp
 .mcp-cache
+
+# agent cache
+.antigravitycli
+.codex
+.claude
+.gemini
