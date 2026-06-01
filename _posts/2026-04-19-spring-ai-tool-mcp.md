@@ -4,7 +4,7 @@ description: Tool Calling과 MCP가 무엇이 다른지, ToolContext와 MCP Requ
 author: ydj515
 date: 2026-04-19 10:30:00 +0900
 categories: [AI, spring]
-tags: [spring ai, mcp, tool calling, tool context, stateless, streamable]
+tags: [spring ai, MCP, tool calling, tool context, stateless, streamable]
 mermaid: true
 image:
   path: /assets/img/spring/logo.png
