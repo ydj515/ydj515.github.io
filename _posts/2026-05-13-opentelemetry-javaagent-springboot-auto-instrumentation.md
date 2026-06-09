@@ -4,7 +4,7 @@ description: javaagent와 ByteBuddy가 Spring MVC/JDBC span을 만드는 흐름,
 author: ydj515
 date: 2026-05-13 05:20:00 +0900
 categories: [opentelemetry, java]
-tags: [opentelemetry, javaagent, spring boot, bytebuddy, instrumentation, jdbc, cubrid]
+tags: [opentelemetry, javaagent, spring boot, bytebuddy, instrumentation, jdbc, cubrid, troubleshooting]
 mermaid: true
 image:
   path: /assets/img/opentelemetry/logo.png
