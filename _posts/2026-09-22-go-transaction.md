@@ -1,5 +1,5 @@
 ---
-title: "Spring 개발자가 본 Go의 트랜잭션 관리 - 여러 리포지토리를 하나로 묶기"
+title: "Spring 개발자가 본 Go의 트랜잭션 관리"
 description: "Spring의 @Transactional에 익숙한 개발자 관점에서 Go의 트랜잭션 전달 방식. TransactionProvider, Role Interface, Context 전파"
 author: ydj515
 date: 2026-09-22 09:00:00 +0900
