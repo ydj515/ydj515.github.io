@@ -4,7 +4,7 @@ description: ORDER BY 없이 조회하면 데이터는 어떤 순서로 반환�
 author: ydj515
 date: 2026-06-11 01:00:00 +0900
 categories: [database]
-tags: [order-by, oracle, mysql, postgresql, sql-server, mongodb, sorting, pagination, offset-fetch, cursor-pagination]
+tags: [order-by, oracle, mysql, postgresql, sql-server, mongodb, sorting, pagination, offset-fetch, cursor-pagination, troubleshooting]
 pin: true
 ---
 

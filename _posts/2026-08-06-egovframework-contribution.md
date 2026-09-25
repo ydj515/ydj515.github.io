@@ -4,7 +4,7 @@ description: "egovframe-template-simple-backend 프로젝트에서 문제를 발
 author: ydj515
 date: 2026-08-06 00:00:00 +0900
 categories: [java, spring, egovframework]
-tags: [java, spring, egovframework]
+tags: [java, spring, egovframework, troubleshooting]
 mermaid: true
 image:
   path: /assets/img/egovframework/logo.png

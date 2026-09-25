@@ -4,7 +4,7 @@ description: 댓글 트리 조회 성능 비교 및 최종 선택
 author: ydj515
 date: 2025-10-03 11:33:00 +0800
 categories: [spring, cte]
-tags: [spring, kotlin, cte]
+tags: [spring, kotlin, cte, troubleshooting]
 pin: true
 math: true
 mermaid: true
