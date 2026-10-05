@@ -8,7 +8,7 @@ image:
   alt: "key management system"
 date: 2026-10-03 00:00:00 +0900
 categories: [security]
-tags: [kms, encryption, envelope-encryption, key-management, aws, tls, diffie-hellman, troubleshooting]
+tags: [kms, encryption, envelope-encryption, key-management, aws, tls, diffie-hellman]
 ---
 
 계약서를 보관하는 서비스를 만든다고 가정해 보겠습니다. 고객의 전화번호와 계약서를 저장하고, 담당자가 필요할 때 다시 조회할 수 있어야 합니다. DB나 백업 파일이 유출되더라도 내용을 바로 읽을 수 없도록 데이터를 암호화하기로 합니다.
