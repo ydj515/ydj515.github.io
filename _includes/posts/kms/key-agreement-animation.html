@@ -1,0 +1,95 @@
+<figure
+  class="kms-flow"
+  id="kms-key-agreement-demo"
+  aria-label="외부 회사와의 키 합의 및 상대 인증 과정"
+>
+  <div class="kms-flow-heading">
+    <span class="kms-flow-eyebrow">외부 서버와 TLS 연결하기</span>
+    <span class="kms-flow-model">TLS 1.3 개념도</span>
+  </div>
+  <div class="kms-flow-modes" role="group" aria-label="살펴볼 연결" hidden>
+    <button type="button" data-mode="connect" aria-pressed="true">
+      정상 연결
+    </button>
+    <button type="button" data-mode="tamper" aria-pressed="false">
+      바꿔치기 시도
+    </button>
+  </div>
+  <p class="kms-flow-boundary">
+    서로 다른 회사 · 신뢰할 CA와 접속할 도메인은 미리 정해 둡니다
+  </p>
+  <div class="kms-flow-scene">
+    <section
+      class="kms-flow-actor"
+      data-actor="ours"
+      aria-label="우리 서버에 있는 값"
+    >
+      <p class="kms-flow-actor-title">우리 서버</p>
+      <p class="kms-flow-actor-note">검토 API에 접속하는 클라이언트</p>
+      <div class="kms-flow-items">
+        <span class="kms-flow-item" data-kind="plain">임시 비밀값 a</span>
+      </div>
+    </section>
+    <section
+      class="kms-flow-actor"
+      data-actor="wire"
+      data-empty="아직 공개값을 보내지 않았습니다"
+      aria-label="네트워크에서 공격자가 얻은 값"
+    >
+      <p class="kms-flow-actor-title">네트워크 / 공격자</p>
+      <p class="kms-flow-actor-note">
+        공격자가 전송 내용을 관찰하거나 변조하는 구간
+      </p>
+      <div class="kms-flow-items">
+        <span class="kms-flow-empty">아직 공개값을 보내지 않았습니다</span>
+      </div>
+    </section>
+    <section
+      class="kms-flow-actor"
+      data-actor="peer"
+      aria-label="협력사 서버에 있는 값"
+    >
+      <p class="kms-flow-actor-title">협력사 서버</p>
+      <p class="kms-flow-actor-note">인증서와 서명에 사용할 개인키 보유</p>
+      <div class="kms-flow-items">
+        <span class="kms-flow-item" data-kind="plain">임시 비밀값 b</span>
+      </div>
+    </section>
+    <span class="kms-flow-flight" aria-hidden="true" hidden></span>
+  </div>
+  <p class="kms-flow-channel">
+    a·b와 통신 키는 전송하지 않습니다 · A·B는 공개해도 되는 값입니다
+  </p>
+  <div class="kms-flow-caption" aria-live="polite" aria-atomic="true">
+    <span class="kms-flow-count">1 / 6</span>
+    <p class="kms-flow-step-title">각자 임시 비밀값을 만듭니다</p>
+    <p class="kms-flow-step-text">
+      아직 통신 키를 공유하지 않은 상태입니다. 각 서버는 임시 비밀값을 만들고,
+      이 값으로 공개값을 계산합니다.
+    </p>
+  </div>
+  <div class="kms-flow-controls" hidden>
+    <button type="button" class="kms-flow-play" aria-pressed="false">
+      재생
+    </button>
+    <button type="button" class="kms-flow-prev" aria-label="이전 단계">
+      이전
+    </button>
+    <button type="button" class="kms-flow-next" aria-label="다음 단계">
+      다음
+    </button>
+    <button type="button" class="kms-flow-reset">처음으로</button>
+    <span class="kms-flow-control-note"
+      >기호는 원리 설명용입니다 · 실제 키나 패킷을 생성하지 않습니다</span
+    >
+  </div>
+  <noscript
+    ><p>
+      양쪽은 공개값을 교환해 같은 비밀을 계산하고, 상대 인증을 거쳐 통신 키를
+      도출합니다. 키 합의만 하고 인증을 생략하면 중간자 공격을 막을 수 없습니다.
+    </p></noscript
+  >
+</figure>
+
+{% include posts/kms/flow-player.html id="kms-key-agreement-demo"
+kind="agreement" %}

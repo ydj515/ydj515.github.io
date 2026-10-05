@@ -1,0 +1,515 @@
+<style>
+  .kms-flow {
+    --kf-bg: #fbfcfd;
+    --kf-card: #fff;
+    --kf-ink: #243348;
+    --kf-muted: #526277;
+    --kf-border: #dce3eb;
+    --kf-accent: #166454;
+    --kf-selected: #e4f2eb;
+    --kf-file: #e8f2fc;
+    --kf-file-ink: #205387;
+    --kf-key: #fff2da;
+    --kf-key-ink: #7b5019;
+    --kf-wrap: #f0eafa;
+    --kf-wrap-ink: #694491;
+    --kf-cipher: #e8f1ed;
+    --kf-cipher-ink: #305d4a;
+    margin: 2rem 0;
+    padding: 22px;
+    border: 1px solid var(--kf-border);
+    border-radius: 12px;
+    background: var(--kf-bg);
+    color: var(--kf-ink);
+    font:
+      14px/1.6 system-ui,
+      sans-serif;
+    text-align: left;
+  }
+  .kms-flow *,
+  .kms-flow *::before,
+  .kms-flow *::after {
+    box-sizing: border-box;
+  }
+  .kms-flow [hidden] {
+    display: none !important;
+  }
+  .kms-flow p {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  .kms-flow-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .kms-flow-eyebrow {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .kms-flow-model {
+    color: var(--kf-muted);
+    font-size: 12px;
+  }
+  .kms-flow button {
+    appearance: none;
+    min-height: 38px;
+    padding: 6px 12px;
+    border: 1px solid var(--kf-border);
+    border-radius: 6px;
+    background: var(--kf-card);
+    color: var(--kf-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .kms-flow button:focus-visible {
+    outline: 3px solid var(--kf-accent);
+    outline-offset: 3px;
+  }
+  .kms-flow button:hover:not(:disabled) {
+    border-color: var(--kf-accent);
+  }
+  .kms-flow button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .kms-flow-modes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .kms-flow-modes button[aria-pressed="true"] {
+    background: var(--kf-selected);
+    border-color: var(--kf-accent);
+    color: var(--kf-accent);
+    font-weight: 700;
+  }
+  .kms-flow .kms-flow-boundary {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    border: 1px dashed var(--kf-border);
+    border-radius: 6px;
+    color: var(--kf-muted);
+    font-size: 12px;
+  }
+  .kms-flow .kms-flow-channel {
+    margin-top: 12px;
+    color: var(--kf-accent);
+    font-size: 12px;
+  }
+  .kms-flow-item[data-kind="alert"] {
+    background: var(--kf-key);
+    color: var(--kf-key-ink);
+    border: 1px dashed currentColor;
+  }
+  .kms-flow-scene {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .kms-flow-actor {
+    min-width: 0;
+    min-height: 230px;
+    padding: 14px 10px;
+    border: 1px solid var(--kf-border);
+    border-radius: 8px;
+    background: var(--kf-card);
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+  .kms-flow-actor[data-active="true"] {
+    border-color: var(--kf-accent);
+    box-shadow: 0 0 0 2px var(--kf-selected);
+  }
+  .kms-flow .kms-flow-actor-title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .kms-flow .kms-flow-actor-note {
+    margin-top: 3px;
+    color: var(--kf-muted);
+    font-size: 11px;
+  }
+  .kms-flow-items {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    align-items: flex-start;
+    margin-top: 18px;
+  }
+  .kms-flow-item {
+    display: inline-block;
+    max-width: 100%;
+    border-radius: 5px;
+    padding: 4px 7px;
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    background: var(--kf-file);
+    color: var(--kf-file-ink);
+  }
+  .kms-flow-item[data-kind="plain"] {
+    background: var(--kf-key);
+    color: var(--kf-key-ink);
+  }
+  .kms-flow-item[data-kind="wrapped"],
+  .kms-flow-item[data-kind="root"] {
+    background: var(--kf-wrap);
+    color: var(--kf-wrap-ink);
+  }
+  .kms-flow-item[data-kind="root"] {
+    border: 1px dashed currentColor;
+  }
+  .kms-flow-item[data-kind="cipher"] {
+    background: var(--kf-cipher);
+    color: var(--kf-cipher-ink);
+  }
+  .kms-flow-empty {
+    font-size: 12px;
+    color: var(--kf-muted);
+  }
+  .kms-flow-flight {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    padding: 6px 10px;
+    border: 1px solid var(--kf-accent);
+    border-radius: 6px;
+    background: var(--kf-selected);
+    color: var(--kf-accent);
+    box-shadow: 0 3px 12px #00000012;
+    font-size: 12px;
+    font-weight: 700;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    pointer-events: none;
+  }
+  .kms-flow-caption {
+    position: relative;
+    min-height: 118px;
+    padding: 18px 0 16px;
+  }
+  .kms-flow-count {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--kf-accent);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+  .kms-flow .kms-flow-step-title {
+    margin-bottom: 5px;
+    font-weight: 700;
+  }
+  .kms-flow .kms-flow-step-text {
+    color: var(--kf-muted);
+    font-size: 13px;
+  }
+  .kms-flow-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    border-top: 1px solid var(--kf-border);
+    padding-top: 14px;
+  }
+  .kms-flow .kms-flow-play {
+    background: var(--kf-accent);
+    border-color: var(--kf-accent);
+    color: var(--kf-card);
+    min-width: 76px;
+    font-weight: 700;
+  }
+  .kms-flow-control-note {
+    width: 100%;
+    color: var(--kf-muted);
+    font-size: 11px;
+    margin-top: 3px;
+  }
+  html[data-mode="dark"] .kms-flow {
+    --kf-bg: #192028;
+    --kf-card: #222b35;
+    --kf-ink: #e3e9f0;
+    --kf-muted: #b0bdcd;
+    --kf-border: #465160;
+    --kf-accent: #96d5ba;
+    --kf-selected: #2a443a;
+    --kf-file: #273e56;
+    --kf-file-ink: #b3d5f6;
+    --kf-key: #493b24;
+    --kf-key-ink: #efd299;
+    --kf-wrap: #3e324e;
+    --kf-wrap-ink: #d8bdeb;
+    --kf-cipher: #2a4037;
+    --kf-cipher-ink: #b1d8c5;
+  }
+  @media (prefers-color-scheme: dark) {
+    html:not([data-mode="light"]) .kms-flow {
+      --kf-bg: #192028;
+      --kf-card: #222b35;
+      --kf-ink: #e3e9f0;
+      --kf-muted: #b0bdcd;
+      --kf-border: #465160;
+      --kf-accent: #96d5ba;
+      --kf-selected: #2a443a;
+      --kf-file: #273e56;
+      --kf-file-ink: #b3d5f6;
+      --kf-key: #493b24;
+      --kf-key-ink: #efd299;
+      --kf-wrap: #3e324e;
+      --kf-wrap-ink: #d8bdeb;
+      --kf-cipher: #2a4037;
+      --kf-cipher-ink: #b1d8c5;
+    }
+  }
+  @media (max-width: 575px) {
+    .kms-flow {
+      padding: 16px;
+    }
+    .kms-flow-scene {
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+    .kms-flow-actor {
+      min-height: 128px;
+      padding: 12px;
+    }
+    .kms-flow-items {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .kms-flow-caption {
+      min-height: 144px;
+    }
+    .kms-flow-modes button {
+      padding: 6px 9px;
+      font-size: 13px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kms-flow-actor {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('{{ include.id }}');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+
+    {% if include.kind == 'agreement' %}
+    const a = ['임시 비밀값 a', 'plain'];
+    const b = ['임시 비밀값 b', 'plain'];
+    const A = ['공개값 A', 'file'];
+    const B = ['공개값 B', 'file'];
+    const secret = ['공유 비밀 S', 'plain'];
+    const handshake = ['핸드셰이크 보호 키', 'plain'];
+    const observed = [A, B];
+    const initial = {
+      title: '각자 임시 비밀값을 만듭니다',
+      text: '아직 통신 키를 공유하지 않은 상태입니다. 각 서버는 임시 비밀값을 만들고, 이 값으로 공개값을 계산합니다.',
+      ours: [a], wire: [], peer: [b], active: 'ours peer'
+    };
+    const scenarios = {
+      connect: [
+        initial,
+        { title: '우리 서버의 공개값 A를 보냅니다', text: 'ClientHello에 공개값 A를 담습니다. 공격자가 A를 복사해도 비밀값 a를 받은 것은 아닙니다.', ours: [a, A], wire: [A], peer: [b, A], active: 'peer wire', move: ['ours', 'peer', 'ClientHello: 공개값 A'] },
+        { title: '협력사 서버의 공개값 B를 받습니다', text: 'ServerHello에 담긴 B도 공개됩니다. 양쪽은 자기 비밀값과 상대 공개값을 갖게 됩니다.', ours: [a, B], wire: observed, peer: [b, A], active: 'ours wire', move: ['peer', 'ours', 'ServerHello: 공개값 B'] },
+        { title: '양쪽에서 공유 비밀 S를 계산합니다', text: '우리 쪽은 a와 B로, 상대는 b와 A로 같은 S를 계산합니다. 공유 비밀과 핸드셰이크 기록으로 핸드셰이크 메시지를 보호할 키를 도출합니다. 아직 상대 인증은 끝나지 않았습니다.', ours: [a, ['키 합의(a, B) → S', 'file'], secret, handshake], wire: observed, peer: [b, ['키 합의(b, A) → S', 'file'], secret, handshake], active: 'ours peer' },
+        { title: '공개값을 보낸 상대가 협력사인지 확인합니다', text: '클라이언트가 인증서의 신뢰 경로·도메인과 핸드셰이크 서명을 검증합니다. Finished도 확인합니다. 이 인증 메시지들은 이미 핸드셰이크 키로 보호됩니다.', ours: [secret, ['상대 인증 성공', 'cipher']], wire: [...observed, ['암호화된 인증 메시지', 'wrapped']], peer: [secret, ['인증서 · 서명 · Finished', 'file']], active: 'ours', move: ['peer', 'ours', 'TLS로 보호된 인증 메시지'] },
+        { title: '통신 키로 계약서를 전송합니다', text: 'Finished 교환을 마치고 애플리케이션 통신 키를 사용합니다. K₁은 우리 → 협력사, K₂는 반대 방향용입니다. DEK와 KEK는 보내지 않습니다.', ours: [['송신 K₁ · 수신 K₂', 'plain'], ['계약서 원문', 'file']], wire: [...observed, ['TLS로 암호화된 계약서', 'wrapped']], peer: [['수신 K₁ · 송신 K₂', 'plain'], ['받은 계약서 원문', 'file']], active: 'peer', move: ['ours', 'peer', 'TLS로 암호화된 계약서'] }
+      ],
+      tamper: [
+        initial,
+        { title: '공격자가 공개값을 바꿔 전달합니다', text: '우리에게는 B 대신 M₂를, 협력사에는 A 대신 M₁을 보냅니다. M₁·M₂는 공격자가 자기 비밀값으로 만든 공개값입니다.', ours: [a, ['받은 공개값 M₂', 'alert']], wire: [...observed, ['자기 공개값 M₁ · M₂', 'alert']], peer: [b, ['받은 공개값 M₁', 'alert']], active: 'wire', move: ['wire', 'ours', 'B 대신 공격자의 M₂'] },
+        { title: '인증을 생략하면 공격자와 통신 키를 만들게 됩니다', text: '우리와 공격자는 S₁을, 공격자와 협력사는 S₂를 계산합니다. 상대 인증 없이 진행하면 공격자가 두 연결 사이에서 내용을 읽고 다시 암호화할 수 있습니다.', ours: [['공격자와 공유한 S₁', 'plain']], wire: [['우리 쪽 S₁', 'plain'], ['협력사 쪽 S₂', 'plain']], peer: [['공격자와 공유한 S₂', 'plain']], active: 'wire' },
+        { title: '상대 인증에 실패하면 연결을 중단합니다', text: 'TLS의 인증 절차를 거치면 공격자는 협력사의 유효한 인증서와 바뀐 교환 기록에 맞는 서명을 함께 제시할 수 없습니다. 우리 서버는 연결을 중단하고 계약서를 보내지 않습니다.', ours: [['인증 실패 · 전송 중단', 'alert']], wire: [['인증서 복사만으로는 서명 불가', 'alert']], peer: [['계약서를 받지 못함', 'file']], active: 'ours' }
+      ]
+    };
+    {% elsif include.kind == 'rotation' %}
+    const fileA = ['파일 A 암호문 · DEK-A로 암호화', 'cipher'];
+    const wrappedA = ['DEK-A 암호문 · v1으로 보호', 'wrapped'];
+    const fileB = ['파일 B 암호문 · DEK-B로 암호화', 'cipher'];
+    const wrappedB = ['DEK-B 암호문 · v2로 보호', 'wrapped'];
+    const v1 = ['KMS 키 재료 v1 · 기존 복호화용', 'root'];
+    const v2 = ['KMS 키 재료 v2 · 신규 암호화용', 'root'];
+    const savedA = [fileA, wrappedA];
+    const savedBoth = [fileA, wrappedA, fileB, wrappedB];
+    const keys = [v1, v2];
+    const scenarios = {
+      rotation: [
+        { title: '파일 A와 DEK-A를 암호화해 보관한 상태입니다', text: '파일 A는 DEK-A로, DEK-A는 KMS의 v1 키 재료로 암호화해 DB에 보관했습니다. 앱은 평문 DEK-A를 정리한 상태입니다.', app: [], kms: [['KMS 키 재료 v1 · 현재 사용', 'root']], store: savedA, active: 'store' },
+        { title: 'KMS의 현재 키 재료가 v2로 바뀝니다', text: 'KMS는 키 ID를 유지하면서 새 키 재료 v2를 추가하고, 기존 v1도 보존합니다. DB의 파일 A 암호문과 DEK-A 암호문은 바뀌지 않습니다.', app: [], kms: keys, store: savedA, active: 'kms' },
+        { title: '새 파일 B에는 별도의 DEK-B를 사용합니다', text: 'GenerateDataKey로 새 DEK-B와 v2로 보호된 DEK-B 암호문을 받습니다. 앱이 DEK-B로 파일 B를 암호화합니다. 기존 DEK-A는 바뀌지 않습니다.', app: [fileB, ['평문 DEK-B', 'plain'], wrappedB], kms: keys, store: savedA, active: 'app', move: ['kms', 'app', '새 DEK-B · v2로 보호한 DEK-B'] },
+        { title: 'DB에 v1과 v2로 보호한 DEK가 함께 남습니다', text: '파일 B도 저장하고 평문 DEK-B는 정리합니다. 파일 A의 DEK-A는 여전히 v1으로 보호돼 있습니다.', app: [], kms: keys, store: savedBoth, active: 'store', move: ['app', 'store', '파일 B 암호문 + DEK-B 암호문'] },
+        { title: 'v2 전환 후에도 파일 A를 조회할 수 있습니다', text: '앱이 사용자 열람 권한을 확인하고 파일 A 암호문과 함께 보관한 DEK-A 암호문을 읽습니다. DEK-B나 새 DEK를 가져오지 않습니다.', app: savedA, kms: keys, store: savedBoth, active: 'app', move: ['store', 'app', '파일 A 암호문 + DEK-A 암호문'] },
+        { title: 'KMS는 DEK-A 암호문에 맞는 v1을 선택합니다', text: '앱은 암호화된 DEK-A만 Decrypt에 보냅니다. KMS가 호출 권한과 암호문 정보를 확인해 보관된 v1으로 복호화합니다. 새 암호화에 쓰는 v2 대신, 이 DEK-A를 암호화했던 v1을 사용합니다.', app: savedA, kms: [v1, v2, ['이번 복호화: v1 선택', 'alert']], store: savedBoth, active: 'kms', move: ['app', 'kms', 'DEK-A 암호문 (v1으로 보호)'] },
+        { title: '앱이 원래의 DEK-A를 돌려받습니다', text: 'KMS는 v1 자체를 내보내지 않습니다. TLS로 보호된 응답에 평문 DEK-A를 담아 반환합니다.', app: [fileA, ['평문 DEK-A', 'plain']], kms: keys, store: savedBoth, active: 'app', move: ['kms', 'app', '평문 DEK-A · TLS로 전달'] },
+        { title: '파일 A는 DEK-A로 복호화합니다', text: '앱이 DEK-A로 파일 A를 복호화하고 인증 태그를 검증한 뒤 응답합니다. 사용한 평문 DEK-A는 정리합니다. DB의 두 파일과 암호화된 DEK는 그대로입니다.', app: [['파일 A 원문 응답', 'file']], kms: keys, store: savedBoth, active: 'app' }
+      ]
+    };
+    {% else %}
+    const file = ['파일 A 원문', 'file'];
+    const cipher = ['암호화된 파일 A', 'cipher'];
+    const plain = ['평문 DEK-A', 'plain'];
+    const wrapped = ['암호화된 DEK-A', 'wrapped'];
+    const kek = ['KEK (DEK 보호)', 'root'];
+    const stored = [cipher, wrapped];
+
+    /* 각 장면은 작업을 마친 뒤 각 위치에 남는 값을 나타낸다. */
+    const scenarios = {
+      encrypt: [
+        { title: '파일 A를 암호화해 저장합니다', text: '앱이 DEK-A로 파일 A를 암호화하고, KMS는 KEK로 DEK-A를 보호합니다. 저장소에는 파일과 DEK-A를 암호화한 값을 보관합니다.', app: [file], kms: [kek], store: [], active: 'app' },
+        { title: '파일 A에 사용할 DEK-A를 요청합니다', text: 'KMS가 서비스의 키 사용 권한을 확인한 뒤 DEK-A를 생성합니다. 파일 A 원문은 KMS에 보내지 않습니다.', app: [file], kms: [kek, ['DEK 생성 · 암호화', 'plain']], store: [], active: 'kms', move: ['app', 'kms', '키 생성 요청'] },
+        { title: '평문 DEK-A와 암호화된 DEK-A를 받습니다', text: '앱은 TLS로 보호된 응답을 받습니다. 평문 DEK-A는 파일 암호화에 사용하고, 암호화된 DEK-A는 저장소에 보관합니다.', app: [file, plain, wrapped], kms: [kek], store: [], active: 'app', move: ['kms', 'app', 'TLS 응답: DEK 두 형태'] },
+        { title: '파일 A를 애플리케이션에서 암호화합니다', text: '앱이 평문 DEK-A로 파일 A를 암호화합니다. 파일 내용은 KMS로 보내지 않습니다.', app: [cipher, plain, wrapped], kms: [kek], store: [], active: 'app' },
+        { title: '암호화된 두 값을 함께 보관합니다', text: '암호화된 파일 A와 암호화된 DEK-A, 복호화에 필요한 메타데이터를 저장합니다.', app: [cipher, plain, wrapped], kms: [kek], store: stored, active: 'store', move: ['app', 'store', '암호문 묶음'] },
+        { title: '사용을 마친 평문 DEK-A를 정리합니다', text: '평문 DEK-A를 파일이나 로그에 남기지 않고, 메모리에 머무는 시간도 줄입니다. 저장소에는 암호화된 DEK-A만 보관합니다.', app: [], kms: [kek], store: stored, active: 'store' }
+      ],
+      decrypt: [
+        { title: '저장한 파일 A를 다시 엽니다', text: '저장소에는 암호화된 파일 A와 암호화된 DEK-A가 함께 있습니다.', app: [], kms: [kek], store: stored, active: 'store' },
+        { title: '사용자의 열람 권한부터 확인합니다', text: '앱이 요청한 사용자에게 파일 A의 열람 권한이 있는지 확인합니다.', app: [['사용자 열람 권한 확인', 'file']], kms: [kek], store: stored, active: 'app' },
+        { title: '저장해 둔 암호문 묶음을 읽습니다', text: '파일 A를 암호화할 때 사용한 DEK-A가 필요하므로, 파일과 함께 보관한 DEK-A 암호문을 읽습니다.', app: stored, kms: [kek], store: stored, active: 'app', move: ['store', 'app', '암호문 묶음'] },
+        { title: '암호화된 DEK-A만 KMS에 보냅니다', text: 'KMS는 서비스의 키 사용 권한을 확인하고, KEK로 DEK-A를 복호화합니다.', app: stored, kms: [kek, ['DEK 복호화', 'plain']], store: stored, active: 'kms', move: ['app', 'kms', '암호화된 DEK'] },
+        { title: '평문 DEK-A를 돌려받습니다', text: '앱이 TLS로 보호된 응답에서 원래 DEK-A를 받습니다. 이 키는 메모리에서 사용하고, KEK는 KMS 안에 남습니다.', app: [cipher, plain], kms: [kek], store: stored, active: 'app', move: ['kms', 'app', 'TLS 응답: 평문 DEK'] },
+        { title: '파일 A를 복호화하고 검증합니다', text: '받은 DEK-A로 파일 A를 복호화합니다. 인증 태그 검증에 성공해야 결과를 사용합니다.', app: [file, plain], kms: [kek], store: stored, active: 'app' },
+        { title: '파일 A의 원문을 반환하고 DEK-A를 정리합니다', text: '앱이 사용자에게 원문을 반환하고 평문 DEK-A를 정리합니다. 저장소의 암호화된 파일 A는 그대로 유지합니다.', app: [['파일 A 원문 응답', 'file']], kms: [kek], store: stored, active: 'store' }
+      ]
+    };
+
+    {% endif %}
+
+    const actors = [...root.querySelectorAll('[data-actor]')].map(actor => actor.dataset.actor);
+    const scene = root.querySelector('.kms-flow-scene');
+    const flight = root.querySelector('.kms-flow-flight');
+    const playButton = root.querySelector('.kms-flow-play');
+    const previousButton = root.querySelector('.kms-flow-prev');
+    const nextButton = root.querySelector('.kms-flow-next');
+    const modeButtons = [...root.querySelectorAll('[data-mode]')];
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let mode = modeButtons[0].dataset.mode;
+    let step = 0;
+    let playing = false;
+    let timer;
+    let animation;
+
+    function stopFlight() {
+      if (animation) animation.cancel();
+      animation = undefined;
+      flight.hidden = true;
+    }
+
+    function pause() {
+      playing = false;
+      window.clearTimeout(timer);
+      if (animation) animation.pause();
+      playButton.textContent = '재생';
+      playButton.setAttribute('aria-pressed', 'false');
+    }
+
+    function moveValue(route) {
+      if (!route || motion.matches || !flight.animate) return;
+      const area = scene.getBoundingClientRect();
+      const from = root.querySelector('[data-actor="' + route[0] + '"]').getBoundingClientRect();
+      const to = root.querySelector('[data-actor="' + route[1] + '"]').getBoundingClientRect();
+      flight.textContent = route[2];
+      flight.hidden = false;
+      const width = flight.offsetWidth;
+      const point = rect => {
+        const x = Math.max(0, Math.min(area.width - width, rect.left - area.left + (rect.width - width) / 2));
+        return 'translate(' + x + 'px, ' + (rect.top - area.top + 65) + 'px)';
+      };
+      animation = flight.animate([
+        { transform: point(from), opacity: 0 },
+        { transform: point(from), opacity: 1, offset: .15 },
+        { transform: point(to), opacity: 1, offset: .85 },
+        { transform: point(to), opacity: 0 }
+      ], { duration: 1500, easing: 'ease-in-out' });
+      animation.onfinish = () => { flight.hidden = true; animation = undefined; };
+    }
+
+    function render(animate = true) {
+      stopFlight();
+      const frames = scenarios[mode];
+      const frame = frames[step];
+      root.dataset.scenario = mode;
+      root.dataset.step = String(step);
+      for (const actor of actors) {
+        const lane = root.querySelector('[data-actor="' + actor + '"]');
+        lane.dataset.active = String(frame.active.split(' ').includes(actor));
+        const items = lane.querySelector('.kms-flow-items');
+        items.replaceChildren();
+        for (const [label, kind] of frame[actor]) {
+          const item = document.createElement('span');
+          item.className = 'kms-flow-item';
+          item.dataset.kind = kind;
+          item.textContent = label;
+          items.append(item);
+        }
+        if (!frame[actor].length) {
+          const empty = document.createElement('span');
+          empty.className = 'kms-flow-empty';
+          empty.textContent = lane.dataset.empty || (actor === 'store' ? '아직 저장된 값이 없습니다' : '사용 중인 값이 없습니다');
+          items.append(empty);
+        }
+      }
+      root.querySelector('.kms-flow-count').textContent = (step + 1) + ' / ' + frames.length;
+      root.querySelector('.kms-flow-step-title').textContent = frame.title;
+      root.querySelector('.kms-flow-step-text').textContent = frame.text;
+      previousButton.disabled = step === 0;
+      nextButton.disabled = step === frames.length - 1;
+      modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
+      if (animate) moveValue(frame.move);
+    }
+
+    function schedule() {
+      timer = window.setTimeout(() => {
+        if (!playing) return;
+        if (step === scenarios[mode].length - 1) {
+          pause();
+          return;
+        }
+        step += 1;
+        render();
+        schedule();
+      }, 3400);
+    }
+
+    playButton.addEventListener('click', () => {
+      if (playing) { pause(); return; }
+      if (step === scenarios[mode].length - 1) { step = 0; render(false); }
+      playing = true;
+      if (animation) animation.play();
+      playButton.textContent = '일시정지';
+      playButton.setAttribute('aria-pressed', 'true');
+      schedule();
+    });
+    previousButton.addEventListener('click', () => { pause(); step = Math.max(0, step - 1); render(); });
+    nextButton.addEventListener('click', () => { pause(); step = Math.min(scenarios[mode].length - 1, step + 1); render(); });
+    root.querySelector('.kms-flow-reset').addEventListener('click', () => { pause(); step = 0; render(false); });
+    modeButtons.forEach(button => button.addEventListener('click', () => { pause(); mode = button.dataset.mode; step = 0; render(false); }));
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { pause(); stopFlight(); } });
+    window.addEventListener('resize', stopFlight);
+    motion.addEventListener('change', () => { pause(); stopFlight(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) { pause(); stopFlight(); }
+      }).observe(root);
+    }
+    root.querySelector('.kms-flow-modes').hidden = false;
+    root.querySelector('.kms-flow-controls').hidden = false;
+    render(false);
+  })();
+</script>

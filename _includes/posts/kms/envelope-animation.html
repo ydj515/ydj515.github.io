@@ -1,0 +1,87 @@
+<figure
+  class="kms-flow"
+  id="kms-envelope-demo"
+  aria-label="우리 회사 내부의 파일 A 저장과 복호화 과정"
+>
+  <div class="kms-flow-heading">
+    <span class="kms-flow-eyebrow">파일 A 저장과 복호화</span>
+    <span class="kms-flow-model">과정 설명용</span>
+  </div>
+  <div class="kms-flow-modes" role="group" aria-label="살펴볼 과정" hidden>
+    <button type="button" data-mode="encrypt" aria-pressed="true">
+      저장하기
+    </button>
+    <button type="button" data-mode="decrypt" aria-pressed="false">
+      다시 열기
+    </button>
+  </div>
+  <p class="kms-flow-boundary">
+    모두 우리 회사 서버이며, 앱·KMS·저장소의 접근 권한은 각각 관리합니다
+  </p>
+  <div class="kms-flow-scene">
+    <section
+      class="kms-flow-actor"
+      data-actor="app"
+      aria-label="애플리케이션의 데이터"
+    >
+      <p class="kms-flow-actor-title">애플리케이션</p>
+      <p class="kms-flow-actor-note">파일과 평문 DEK를 메모리에서 처리</p>
+      <div class="kms-flow-items">
+        <span class="kms-flow-item" data-kind="file">파일 A 원문</span>
+      </div>
+    </section>
+    <section class="kms-flow-actor" data-actor="kms" aria-label="KMS의 키">
+      <p class="kms-flow-actor-title">KMS</p>
+      <p class="kms-flow-actor-note">KEK는 KMS 내부에서만 사용</p>
+      <div class="kms-flow-items">
+        <span class="kms-flow-item" data-kind="root">KEK (DEK 보호)</span>
+      </div>
+    </section>
+    <section
+      class="kms-flow-actor"
+      data-actor="store"
+      aria-label="저장소의 데이터"
+    >
+      <p class="kms-flow-actor-title">저장소</p>
+      <p class="kms-flow-actor-note">디스크에는 암호화된 값만 보관</p>
+      <div class="kms-flow-items">
+        <span class="kms-flow-empty">아직 저장된 값이 없습니다</span>
+      </div>
+    </section>
+    <span class="kms-flow-flight" aria-hidden="true" hidden></span>
+  </div>
+  <p class="kms-flow-channel">
+    서버 간 전송은 TLS로 보호합니다. 이동하는 라벨은 요청·응답에 담긴 값입니다.
+  </p>
+  <div class="kms-flow-caption" aria-live="polite" aria-atomic="true">
+    <span class="kms-flow-count">1 / 6</span>
+    <p class="kms-flow-step-title">파일 A를 암호화해 저장합니다</p>
+    <p class="kms-flow-step-text">
+      앱이 DEK-A로 파일 A를 암호화하고, KMS는 KEK로 DEK-A를 보호합니다.
+      저장소에는 파일과 DEK-A를 암호화한 값을 보관합니다.
+    </p>
+  </div>
+  <div class="kms-flow-controls" hidden>
+    <button type="button" class="kms-flow-play" aria-pressed="false">
+      재생
+    </button>
+    <button type="button" class="kms-flow-prev" aria-label="이전 단계">
+      이전
+    </button>
+    <button type="button" class="kms-flow-next" aria-label="다음 단계">
+      다음
+    </button>
+    <button type="button" class="kms-flow-reset">처음으로</button>
+    <span class="kms-flow-control-note"
+      >이전·다음 버튼으로 단계를 확인할 수 있습니다</span
+    >
+  </div>
+  <noscript
+    ><p>
+      애니메이션에는 JavaScript가 필요합니다. 저장·복호화 순서는 이어지는
+      본문에서 확인할 수 있습니다.
+    </p></noscript
+  >
+</figure>
+
+{% include posts/kms/flow-player.html id="kms-envelope-demo" kind="envelope" %}
