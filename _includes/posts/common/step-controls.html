@@ -1,0 +1,63 @@
+<div class="step-controls">
+  <button type="button" class="sc-icon sc-play" aria-label="재생" title="재생"><svg class="sc-i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9M11 3.5v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg><svg class="sc-i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6l7.8-4.8z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" /></svg></button>
+  <button type="button" class="sc-icon sc-reset" aria-label="처음부터" title="처음부터"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 8.6a4.6 4.6 0 1 0 1.5-4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><path d="M4.4 1.9v2.9h2.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+  <div class="sc-nav">
+    <button type="button" class="sc-arrow sc-prev" aria-label="이전 단계" title="이전 단계"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+    <div class="sc-dots" role="group" aria-label="단계 선택"></div>
+    <button type="button" class="sc-arrow sc-next" aria-label="다음 단계" title="다음 단계"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+  </div>
+</div>
+<style>
+.step-controls{--sc-accent:#246d7a;--sc-muted:#94a3b8;--sc-border:#94a3b8;--sc-bg:var(--card-bg,#fff);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.step-controls .sc-icon,.step-controls .sc-arrow,.step-controls .sc-dot{appearance:none;margin:0;font:inherit;color:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.step-controls .sc-icon{width:36px;height:36px;min-height:36px;padding:0;border:1px solid var(--sc-border);border-radius:6px;background:var(--sc-bg)}
+.step-controls .sc-arrow{width:28px;height:36px;min-height:36px;padding:0;border:0;border-radius:6px;background:none}
+.step-controls .sc-icon svg,.step-controls .sc-arrow svg{display:block;width:16px;height:16px;color:inherit}
+.step-controls .sc-play .sc-i-play,.step-controls .sc-play.is-paused .sc-i-pause{display:none}.step-controls .sc-play.is-paused .sc-i-play{display:block}
+.step-controls .sc-arrow:disabled{opacity:.3;cursor:default}
+.step-controls .sc-nav{display:flex;align-items:center;margin-left:4px}.step-controls .sc-dots{display:flex;align-items:center}
+.step-controls .sc-dot{width:20px;height:32px;min-height:32px;padding:0;border:0;border-radius:6px;background:none;transition:width .25s}
+.step-controls .sc-dot::before{content:'';width:8px;height:8px;border-radius:4px;background:var(--sc-muted);transition:width .25s,background-color .25s}
+.step-controls .sc-dot:hover::before{background:var(--sc-accent)}.step-controls .sc-dot[aria-current="step"]{width:32px}.step-controls .sc-dot[aria-current="step"]::before{width:22px;background:var(--sc-accent)}
+.step-controls button:focus-visible{outline:3px solid var(--sc-accent);outline-offset:2px}
+@media(max-width:480px){.step-controls .sc-arrow{width:24px}.step-controls .sc-dot{width:16px}.step-controls .sc-dot[aria-current="step"]{width:28px}.step-controls .sc-dot[aria-current="step"]::before{width:18px}}
+@media(prefers-reduced-motion:reduce){.step-controls .sc-dot,.step-controls .sc-dot::before{transition:none}}
+</style>
+<script>
+  // 단계형 애니메이션이 함께 쓰는 재생·처음부터·캐러셀 컨트롤입니다.
+  // 재생 방식은 각 애니메이션이 맡고, 이 함수는 버튼 생성과 표시 상태만 다룹니다.
+  window.ydjStepControls = window.ydjStepControls || ((container, handlers) => {
+    const play = container.querySelector('.sc-play');
+    const previous = container.querySelector('.sc-prev'), next = container.querySelector('.sc-next');
+    const box = container.querySelector('.sc-dots');
+    let dots = [], current = 0;
+    play.addEventListener('click', () => handlers.toggle());
+    container.querySelector('.sc-reset').addEventListener('click', () => handlers.reset());
+    previous.addEventListener('click', () => handlers.select(Math.max(0, current - 1)));
+    next.addEventListener('click', () => handlers.select(Math.min(dots.length - 1, current + 1)));
+    return {
+      setSteps(titles) {
+        dots = titles.map((title, i) => {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'sc-dot';
+          dot.title = `${i + 1}. ${title}`;
+          dot.setAttribute('aria-label', `${i + 1}단계: ${title}`);
+          dot.addEventListener('click', () => handlers.select(i));
+          return dot;
+        });
+        box.replaceChildren(...dots);
+      },
+      update(index, playing) {
+        current = index;
+        dots.forEach((dot, i) => { if (i === index) dot.setAttribute('aria-current', 'step'); else dot.removeAttribute('aria-current'); });
+        previous.disabled = index === 0;
+        next.disabled = index === dots.length - 1;
+        const label = playing ? '일시정지' : '재생';
+        play.classList.toggle('is-paused', !playing);
+        play.setAttribute('aria-label', label);
+        play.title = label;
+      }
+    };
+  });
+</script>

@@ -55,13 +55,11 @@
         <span class="kms-flow-item" data-kind="plain">임시 비밀값 b</span>
       </div>
     </section>
-    <span class="kms-flow-flight" aria-hidden="true" hidden></span>
   </div>
   <p class="kms-flow-channel">
-    a·b와 통신 키는 전송하지 않습니다 · A·B는 공개해도 되는 값입니다
+    a·b와 통신 키는 전송하지 않습니다 · A·B는 공개해도 되는 값입니다 · 점선은 응답입니다
   </p>
   <div class="kms-flow-caption" aria-live="polite" aria-atomic="true">
-    <span class="kms-flow-count">1 / 6</span>
     <p class="kms-flow-step-title">각자 임시 비밀값을 만듭니다</p>
     <p class="kms-flow-step-text">
       아직 통신 키를 공유하지 않은 상태입니다. 각 서버는 임시 비밀값을 만들고,
@@ -69,19 +67,7 @@
     </p>
   </div>
   <div class="kms-flow-controls" hidden>
-    <button type="button" class="kms-flow-play" aria-pressed="false">
-      재생
-    </button>
-    <button type="button" class="kms-flow-prev" aria-label="이전 단계">
-      이전
-    </button>
-    <button type="button" class="kms-flow-next" aria-label="다음 단계">
-      다음
-    </button>
-    <button type="button" class="kms-flow-reset">처음으로</button>
-    <span class="kms-flow-control-note"
-      >기호는 원리 설명용입니다 · 실제 키나 패킷을 생성하지 않습니다</span
-    >
+    {% include posts/common/step-controls.html %}
   </div>
   <noscript
     ><p>

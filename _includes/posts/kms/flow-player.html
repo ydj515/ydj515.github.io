@@ -15,6 +15,8 @@
     --kf-wrap-ink: #694491;
     --kf-cipher: #e8f1ed;
     --kf-cipher-ink: #305d4a;
+    --kf-node: #94a3b8;
+    --kf-badge: #1f6b5c;
     margin: 2rem 0;
     padding: 22px;
     border: 1px solid var(--kf-border);
@@ -110,14 +112,14 @@
     position: relative;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+    gap: 56px;
   }
   .kms-flow-actor {
     min-width: 0;
     min-height: 230px;
     padding: 14px 10px;
-    border: 1px solid var(--kf-border);
-    border-radius: 8px;
+    border: 1.5px solid var(--kf-node);
+    border-radius: 10px;
     background: var(--kf-card);
     transition:
       border-color 0.25s,
@@ -125,7 +127,7 @@
   }
   .kms-flow-actor[data-active="true"] {
     border-color: var(--kf-accent);
-    box-shadow: 0 0 0 2px var(--kf-selected);
+    box-shadow: 0 0 0 1px var(--kf-accent);
   }
   .kms-flow .kms-flow-actor-title {
     font-size: 15px;
@@ -174,36 +176,56 @@
     font-size: 12px;
     color: var(--kf-muted);
   }
-  .kms-flow-flight {
+  .kms-flow-routes {
     position: absolute;
-    z-index: 2;
     top: 0;
     left: 0;
-    padding: 6px 10px;
-    border: 1px solid var(--kf-accent);
-    border-radius: 6px;
-    background: var(--kf-selected);
-    color: var(--kf-accent);
-    box-shadow: 0 3px 12px #00000012;
-    font-size: 12px;
-    font-weight: 700;
-    max-width: 100%;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    z-index: 1;
+    overflow: visible;
     pointer-events: none;
+    color: var(--kf-accent);
+  }
+  .kms-flow-route {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    opacity: 0.45;
+  }
+  .kms-flow-route.is-reply {
+    stroke-dasharray: 7 6;
+  }
+  .kms-flow-dot {
+    fill: currentColor;
+  }
+  .kms-flow-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    max-width: 220px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--kf-badge);
+    color: #fff;
+    box-shadow: 0 2px 8px #00000024;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+    pointer-events: none;
+  }
+  .kms-flow .kms-flow-wire {
+    margin-bottom: 5px;
+    color: var(--kf-accent);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .kms-flow .kms-flow-wire:empty {
+    display: none;
   }
   .kms-flow-caption {
     position: relative;
     min-height: 118px;
     padding: 18px 0 16px;
-  }
-  .kms-flow-count {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--kf-accent);
-    font-size: 12px;
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
   }
   .kms-flow .kms-flow-step-title {
     margin-bottom: 5px;
@@ -221,18 +243,11 @@
     border-top: 1px solid var(--kf-border);
     padding-top: 14px;
   }
-  .kms-flow .kms-flow-play {
-    background: var(--kf-accent);
-    border-color: var(--kf-accent);
-    color: var(--kf-card);
-    min-width: 76px;
-    font-weight: 700;
-  }
-  .kms-flow-control-note {
-    width: 100%;
-    color: var(--kf-muted);
-    font-size: 11px;
-    margin-top: 3px;
+  .kms-flow .step-controls {
+    --sc-accent: var(--kf-accent);
+    --sc-muted: color-mix(in srgb, var(--kf-muted) 55%, transparent);
+    --sc-border: var(--kf-border);
+    --sc-bg: var(--kf-card);
   }
   html[data-mode="dark"] .kms-flow {
     --kf-bg: #192028;
@@ -250,6 +265,8 @@
     --kf-wrap-ink: #d8bdeb;
     --kf-cipher: #2a4037;
     --kf-cipher-ink: #b1d8c5;
+    --kf-node: #6b7889;
+    --kf-badge: #2f7d6b;
   }
   @media (prefers-color-scheme: dark) {
     html:not([data-mode="light"]) .kms-flow {
@@ -268,6 +285,8 @@
       --kf-wrap-ink: #d8bdeb;
       --kf-cipher: #2a4037;
       --kf-cipher-ink: #b1d8c5;
+      --kf-node: #6b7889;
+      --kf-badge: #2f7d6b;
     }
   }
   @media (max-width: 575px) {
@@ -276,7 +295,7 @@
     }
     .kms-flow-scene {
       grid-template-columns: 1fr;
-      gap: 9px;
+      gap: 44px;
     }
     .kms-flow-actor {
       min-height: 128px;
@@ -326,9 +345,9 @@
       connect: [
         initial,
         { title: '우리 서버의 공개값 A를 보냅니다', text: 'ClientHello에 공개값 A를 담습니다. 공격자가 A를 복사해도 비밀값 a를 받은 것은 아닙니다.', ours: [a, A], wire: [A], peer: [b, A], active: 'peer wire', move: ['ours', 'peer', 'ClientHello: 공개값 A'] },
-        { title: '협력사 서버의 공개값 B를 받습니다', text: 'ServerHello에 담긴 B도 공개됩니다. 양쪽은 자기 비밀값과 상대 공개값을 갖게 됩니다.', ours: [a, B], wire: observed, peer: [b, A], active: 'ours wire', move: ['peer', 'ours', 'ServerHello: 공개값 B'] },
+        { title: '협력사 서버의 공개값 B를 받습니다', text: 'ServerHello에 담긴 B도 공개됩니다. 양쪽은 자기 비밀값과 상대 공개값을 갖게 됩니다.', ours: [a, B], wire: observed, peer: [b, A], active: 'ours wire', move: ['peer', 'ours', 'ServerHello: 공개값 B', true] },
         { title: '양쪽에서 공유 비밀 S를 계산합니다', text: '우리 쪽은 a와 B로, 상대는 b와 A로 같은 S를 계산합니다. 공유 비밀과 핸드셰이크 기록으로 핸드셰이크 메시지를 보호할 키를 도출합니다. 아직 상대 인증은 끝나지 않았습니다.', ours: [a, ['키 합의(a, B) → S', 'file'], secret, handshake], wire: observed, peer: [b, ['키 합의(b, A) → S', 'file'], secret, handshake], active: 'ours peer' },
-        { title: '공개값을 보낸 상대가 협력사인지 확인합니다', text: '클라이언트가 인증서의 신뢰 경로·도메인과 핸드셰이크 서명을 검증합니다. Finished도 확인합니다. 이 인증 메시지들은 이미 핸드셰이크 키로 보호됩니다.', ours: [secret, ['상대 인증 성공', 'cipher']], wire: [...observed, ['암호화된 인증 메시지', 'wrapped']], peer: [secret, ['인증서 · 서명 · Finished', 'file']], active: 'ours', move: ['peer', 'ours', 'TLS로 보호된 인증 메시지'] },
+        { title: '공개값을 보낸 상대가 협력사인지 확인합니다', text: '클라이언트가 인증서의 신뢰 경로·도메인과 핸드셰이크 서명을 검증합니다. Finished도 확인합니다. 이 인증 메시지들은 이미 핸드셰이크 키로 보호됩니다.', ours: [secret, ['상대 인증 성공', 'cipher']], wire: [...observed, ['암호화된 인증 메시지', 'wrapped']], peer: [secret, ['인증서 · 서명 · Finished', 'file']], active: 'ours', move: ['peer', 'ours', 'TLS로 보호된 인증 메시지', true] },
         { title: '통신 키로 계약서를 전송합니다', text: 'Finished 교환을 마치고 애플리케이션 통신 키를 사용합니다. K₁은 우리 → 협력사, K₂는 반대 방향용입니다. DEK와 KEK는 보내지 않습니다.', ours: [['송신 K₁ · 수신 K₂', 'plain'], ['계약서 원문', 'file']], wire: [...observed, ['TLS로 암호화된 계약서', 'wrapped']], peer: [['수신 K₁ · 송신 K₂', 'plain'], ['받은 계약서 원문', 'file']], active: 'peer', move: ['ours', 'peer', 'TLS로 암호화된 계약서'] }
       ],
       tamper: [
@@ -352,11 +371,11 @@
       rotation: [
         { title: '파일 A와 DEK-A를 암호화해 보관한 상태입니다', text: '파일 A는 DEK-A로, DEK-A는 KMS의 v1 키 재료로 암호화해 DB에 보관했습니다. 앱은 평문 DEK-A를 정리한 상태입니다.', app: [], kms: [['KMS 키 재료 v1 · 현재 사용', 'root']], store: savedA, active: 'store' },
         { title: 'KMS의 현재 키 재료가 v2로 바뀝니다', text: 'KMS는 키 ID를 유지하면서 새 키 재료 v2를 추가하고, 기존 v1도 보존합니다. DB의 파일 A 암호문과 DEK-A 암호문은 바뀌지 않습니다.', app: [], kms: keys, store: savedA, active: 'kms' },
-        { title: '새 파일 B에는 별도의 DEK-B를 사용합니다', text: 'GenerateDataKey로 새 DEK-B와 v2로 보호된 DEK-B 암호문을 받습니다. 앱이 DEK-B로 파일 B를 암호화합니다. 기존 DEK-A는 바뀌지 않습니다.', app: [fileB, ['평문 DEK-B', 'plain'], wrappedB], kms: keys, store: savedA, active: 'app', move: ['kms', 'app', '새 DEK-B · v2로 보호한 DEK-B'] },
+        { title: '새 파일 B에는 별도의 DEK-B를 사용합니다', text: 'GenerateDataKey로 새 DEK-B와 v2로 보호된 DEK-B 암호문을 받습니다. 앱이 DEK-B로 파일 B를 암호화합니다. 기존 DEK-A는 바뀌지 않습니다.', app: [fileB, ['평문 DEK-B', 'plain'], wrappedB], kms: keys, store: savedA, active: 'app', move: ['kms', 'app', '새 DEK-B · v2로 보호한 DEK-B', true] },
         { title: 'DB에 v1과 v2로 보호한 DEK가 함께 남습니다', text: '파일 B도 저장하고 평문 DEK-B는 정리합니다. 파일 A의 DEK-A는 여전히 v1으로 보호돼 있습니다.', app: [], kms: keys, store: savedBoth, active: 'store', move: ['app', 'store', '파일 B 암호문 + DEK-B 암호문'] },
-        { title: 'v2 전환 후에도 파일 A를 조회할 수 있습니다', text: '앱이 사용자 열람 권한을 확인하고 파일 A 암호문과 함께 보관한 DEK-A 암호문을 읽습니다. DEK-B나 새 DEK를 가져오지 않습니다.', app: savedA, kms: keys, store: savedBoth, active: 'app', move: ['store', 'app', '파일 A 암호문 + DEK-A 암호문'] },
+        { title: 'v2 전환 후에도 파일 A를 조회할 수 있습니다', text: '앱이 사용자 열람 권한을 확인하고 파일 A 암호문과 함께 보관한 DEK-A 암호문을 읽습니다. DEK-B나 새 DEK를 가져오지 않습니다.', app: savedA, kms: keys, store: savedBoth, active: 'app', move: ['store', 'app', '파일 A 암호문 + DEK-A 암호문', true] },
         { title: 'KMS는 DEK-A 암호문에 맞는 v1을 선택합니다', text: '앱은 암호화된 DEK-A만 Decrypt에 보냅니다. KMS가 호출 권한과 암호문 정보를 확인해 보관된 v1으로 복호화합니다. 새 암호화에 쓰는 v2 대신, 이 DEK-A를 암호화했던 v1을 사용합니다.', app: savedA, kms: [v1, v2, ['이번 복호화: v1 선택', 'alert']], store: savedBoth, active: 'kms', move: ['app', 'kms', 'DEK-A 암호문 (v1으로 보호)'] },
-        { title: '앱이 원래의 DEK-A를 돌려받습니다', text: 'KMS는 v1 자체를 내보내지 않습니다. TLS로 보호된 응답에 평문 DEK-A를 담아 반환합니다.', app: [fileA, ['평문 DEK-A', 'plain']], kms: keys, store: savedBoth, active: 'app', move: ['kms', 'app', '평문 DEK-A · TLS로 전달'] },
+        { title: '앱이 원래의 DEK-A를 돌려받습니다', text: 'KMS는 v1 자체를 내보내지 않습니다. TLS로 보호된 응답에 평문 DEK-A를 담아 반환합니다.', app: [fileA, ['평문 DEK-A', 'plain']], kms: keys, store: savedBoth, active: 'app', move: ['kms', 'app', '평문 DEK-A · TLS로 전달', true] },
         { title: '파일 A는 DEK-A로 복호화합니다', text: '앱이 DEK-A로 파일 A를 복호화하고 인증 태그를 검증한 뒤 응답합니다. 사용한 평문 DEK-A는 정리합니다. DB의 두 파일과 암호화된 DEK는 그대로입니다.', app: [['파일 A 원문 응답', 'file']], kms: keys, store: savedBoth, active: 'app' }
       ]
     };
@@ -373,7 +392,7 @@
       encrypt: [
         { title: '파일 A를 암호화해 저장합니다', text: '앱이 DEK-A로 파일 A를 암호화하고, KMS는 KEK로 DEK-A를 보호합니다. 저장소에는 파일과 DEK-A를 암호화한 값을 보관합니다.', app: [file], kms: [kek], store: [], active: 'app' },
         { title: '파일 A에 사용할 DEK-A를 요청합니다', text: 'KMS가 서비스의 키 사용 권한을 확인한 뒤 DEK-A를 생성합니다. 파일 A 원문은 KMS에 보내지 않습니다.', app: [file], kms: [kek, ['DEK 생성 · 암호화', 'plain']], store: [], active: 'kms', move: ['app', 'kms', '키 생성 요청'] },
-        { title: '평문 DEK-A와 암호화된 DEK-A를 받습니다', text: '앱은 TLS로 보호된 응답을 받습니다. 평문 DEK-A는 파일 암호화에 사용하고, 암호화된 DEK-A는 저장소에 보관합니다.', app: [file, plain, wrapped], kms: [kek], store: [], active: 'app', move: ['kms', 'app', 'TLS 응답: DEK 두 형태'] },
+        { title: '평문 DEK-A와 암호화된 DEK-A를 받습니다', text: '앱은 TLS로 보호된 응답을 받습니다. 평문 DEK-A는 파일 암호화에 사용하고, 암호화된 DEK-A는 저장소에 보관합니다.', app: [file, plain, wrapped], kms: [kek], store: [], active: 'app', move: ['kms', 'app', 'TLS 응답: DEK 두 형태', true] },
         { title: '파일 A를 애플리케이션에서 암호화합니다', text: '앱이 평문 DEK-A로 파일 A를 암호화합니다. 파일 내용은 KMS로 보내지 않습니다.', app: [cipher, plain, wrapped], kms: [kek], store: [], active: 'app' },
         { title: '암호화된 두 값을 함께 보관합니다', text: '암호화된 파일 A와 암호화된 DEK-A, 복호화에 필요한 메타데이터를 저장합니다.', app: [cipher, plain, wrapped], kms: [kek], store: stored, active: 'store', move: ['app', 'store', '암호문 묶음'] },
         { title: '사용을 마친 평문 DEK-A를 정리합니다', text: '평문 DEK-A를 파일이나 로그에 남기지 않고, 메모리에 머무는 시간도 줄입니다. 저장소에는 암호화된 DEK-A만 보관합니다.', app: [], kms: [kek], store: stored, active: 'store' }
@@ -381,9 +400,9 @@
       decrypt: [
         { title: '저장한 파일 A를 다시 엽니다', text: '저장소에는 암호화된 파일 A와 암호화된 DEK-A가 함께 있습니다.', app: [], kms: [kek], store: stored, active: 'store' },
         { title: '사용자의 열람 권한부터 확인합니다', text: '앱이 요청한 사용자에게 파일 A의 열람 권한이 있는지 확인합니다.', app: [['사용자 열람 권한 확인', 'file']], kms: [kek], store: stored, active: 'app' },
-        { title: '저장해 둔 암호문 묶음을 읽습니다', text: '파일 A를 암호화할 때 사용한 DEK-A가 필요하므로, 파일과 함께 보관한 DEK-A 암호문을 읽습니다.', app: stored, kms: [kek], store: stored, active: 'app', move: ['store', 'app', '암호문 묶음'] },
+        { title: '저장해 둔 암호문 묶음을 읽습니다', text: '파일 A를 암호화할 때 사용한 DEK-A가 필요하므로, 파일과 함께 보관한 DEK-A 암호문을 읽습니다.', app: stored, kms: [kek], store: stored, active: 'app', move: ['store', 'app', '암호문 묶음', true] },
         { title: '암호화된 DEK-A만 KMS에 보냅니다', text: 'KMS는 서비스의 키 사용 권한을 확인하고, KEK로 DEK-A를 복호화합니다.', app: stored, kms: [kek, ['DEK 복호화', 'plain']], store: stored, active: 'kms', move: ['app', 'kms', '암호화된 DEK'] },
-        { title: '평문 DEK-A를 돌려받습니다', text: '앱이 TLS로 보호된 응답에서 원래 DEK-A를 받습니다. 이 키는 메모리에서 사용하고, KEK는 KMS 안에 남습니다.', app: [cipher, plain], kms: [kek], store: stored, active: 'app', move: ['kms', 'app', 'TLS 응답: 평문 DEK'] },
+        { title: '평문 DEK-A를 돌려받습니다', text: '앱이 TLS로 보호된 응답에서 원래 DEK-A를 받습니다. 이 키는 메모리에서 사용하고, KEK는 KMS 안에 남습니다.', app: [cipher, plain], kms: [kek], store: stored, active: 'app', move: ['kms', 'app', 'TLS 응답: 평문 DEK', true] },
         { title: '파일 A를 복호화하고 검증합니다', text: '받은 DEK-A로 파일 A를 복호화합니다. 인증 태그 검증에 성공해야 결과를 사용합니다.', app: [file, plain], kms: [kek], store: stored, active: 'app' },
         { title: '파일 A의 원문을 반환하고 DEK-A를 정리합니다', text: '앱이 사용자에게 원문을 반환하고 평문 DEK-A를 정리합니다. 저장소의 암호화된 파일 A는 그대로 유지합니다.', app: [['파일 A 원문 응답', 'file']], kms: [kek], store: stored, active: 'store' }
       ]
@@ -393,55 +412,107 @@
 
     const actors = [...root.querySelectorAll('[data-actor]')].map(actor => actor.dataset.actor);
     const scene = root.querySelector('.kms-flow-scene');
-    const flight = root.querySelector('.kms-flow-flight');
-    const playButton = root.querySelector('.kms-flow-play');
-    const previousButton = root.querySelector('.kms-flow-prev');
-    const nextButton = root.querySelector('.kms-flow-next');
     const modeButtons = [...root.querySelectorAll('[data-mode]')];
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const MOVE = 1500, BADGE_HOLD = 900;
+    const controls = window.ydjStepControls(root.querySelector('.step-controls'), {
+      toggle: () => toggle(),
+      reset: () => { pause(); step = 0; render(false); },
+      select: index => { pause(); step = index; render(); }
+    });
     let mode = modeButtons[0].dataset.mode;
     let step = 0;
     let playing = false;
     let timer;
-    let animation;
+    let shownMode;
+    let elapsed = MOVE + BADGE_HOLD;
+    let last = 0;
 
-    function stopFlight() {
-      if (animation) animation.cancel();
-      animation = undefined;
-      flight.hidden = true;
+    /* 상자 사이의 경로선, 이동하는 점, 점에 붙는 값 라벨을 장면 위에 겹쳐 그린다. */
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'kms-flow-routes');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.innerHTML = '<defs><marker id="' + root.id + '-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 L9 5 L1 9" fill="none" stroke="currentColor" stroke-width="1.6" /></marker></defs><path class="kms-flow-route" /><circle class="kms-flow-dot" r="7" />';
+    const route = svg.querySelector('.kms-flow-route');
+    const dot = svg.querySelector('.kms-flow-dot');
+    const badge = document.createElement('span');
+    badge.className = 'kms-flow-badge';
+    badge.setAttribute('aria-hidden', 'true');
+    scene.append(svg, badge);
+    const caption = root.querySelector('.kms-flow-caption');
+    const wire = document.createElement('p');
+    wire.className = 'kms-flow-wire';
+    caption.insertBefore(wire, root.querySelector('.kms-flow-step-text'));
+    const nameOf = actor => root.querySelector('[data-actor="' + actor + '"] .kms-flow-actor-title').textContent.trim();
+
+    // 옆 칸으로는 상자 사이를 바로 잇고, 두 칸 떨어진 곳으로는 가운데 상자를 통과하는 것처럼 선을 끊어 그린다.
+    // 좁은 화면에서 상자가 세로로 쌓이면 같은 규칙을 세로 방향으로 적용한다.
+    function routePath(move) {
+      const area = scene.getBoundingClientRect();
+      const box = actor => {
+        const rect = root.querySelector('[data-actor="' + actor + '"]').getBoundingClientRect();
+        return { l: rect.left - area.left, r: rect.right - area.left, t: rect.top - area.top, b: rect.bottom - area.top, w: rect.width, h: rect.height };
+      };
+      const from = actors.indexOf(move[0]), to = actors.indexOf(move[1]);
+      const names = Math.abs(from - to) === 2 ? [move[0], actors[(from + to) / 2], move[1]] : [move[0], move[1]];
+      const lane = names.map(box);
+      const stacked = lane[1].t >= lane[0].b - 1 || lane[1].b <= lane[0].t + 1;
+      const forward = from < to;
+      const segments = [];
+      for (let i = 0; i < lane.length - 1; i += 1) {
+        const a = lane[i], b = lane[i + 1];
+        if (stacked) {
+          const x = a.l + a.w / 2;
+          segments.push(forward ? [x, a.b, x, b.t] : [x, a.t, x, b.b]);
+        } else {
+          const y = a.t + Math.min(a.h / 2, 120);
+          segments.push(forward ? [a.r, y, b.l, y] : [a.l, y, b.r, y]);
+        }
+      }
+      return { d: segments.map(([x1, y1, x2, y2]) => 'M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2).join(' '), stacked, area };
+    }
+
+    let layout;
+    function drawRoute() {
+      const move = scenarios[mode][step].move;
+      const area = scene.getBoundingClientRect();
+      svg.setAttribute('viewBox', '0 0 ' + area.width + ' ' + area.height);
+      svg.setAttribute('width', area.width);
+      svg.setAttribute('height', area.height);
+      svg.style.display = move ? '' : 'none';
+      badge.hidden = true;
+      if (!move) { layout = undefined; return; }
+      layout = routePath(move);
+      route.setAttribute('d', layout.d);
+      route.classList.toggle('is-reply', !!move[3]);
+      route.setAttribute('marker-end', 'url(#' + root.id + '-arrow)');
+      badge.textContent = move[2];
+      position();
+    }
+
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    function position() {
+      if (!layout) return;
+      const progress = motion.matches ? 1 : ease(Math.min(elapsed / MOVE, 1));
+      const point = route.getPointAtLength(route.getTotalLength() * progress);
+      dot.setAttribute('cx', point.x);
+      dot.setAttribute('cy', point.y);
+      badge.hidden = motion.matches || elapsed > MOVE + BADGE_HOLD;
+      if (badge.hidden) return;
+      const width = badge.offsetWidth, height = badge.offsetHeight;
+      const x = layout.stacked ? point.x + 14 : point.x - width / 2;
+      const y = layout.stacked ? point.y - height / 2 : point.y - height - 12;
+      badge.style.transform = 'translate(' + Math.max(0, Math.min(layout.area.width - width, x)) + 'px, ' + y + 'px)';
     }
 
     function pause() {
       playing = false;
       window.clearTimeout(timer);
-      if (animation) animation.pause();
-      playButton.textContent = '재생';
-      playButton.setAttribute('aria-pressed', 'false');
-    }
-
-    function moveValue(route) {
-      if (!route || motion.matches || !flight.animate) return;
-      const area = scene.getBoundingClientRect();
-      const from = root.querySelector('[data-actor="' + route[0] + '"]').getBoundingClientRect();
-      const to = root.querySelector('[data-actor="' + route[1] + '"]').getBoundingClientRect();
-      flight.textContent = route[2];
-      flight.hidden = false;
-      const width = flight.offsetWidth;
-      const point = rect => {
-        const x = Math.max(0, Math.min(area.width - width, rect.left - area.left + (rect.width - width) / 2));
-        return 'translate(' + x + 'px, ' + (rect.top - area.top + 65) + 'px)';
-      };
-      animation = flight.animate([
-        { transform: point(from), opacity: 0 },
-        { transform: point(from), opacity: 1, offset: .15 },
-        { transform: point(to), opacity: 1, offset: .85 },
-        { transform: point(to), opacity: 0 }
-      ], { duration: 1500, easing: 'ease-in-out' });
-      animation.onfinish = () => { flight.hidden = true; animation = undefined; };
+      controls.update(step, false);
     }
 
     function render(animate = true) {
-      stopFlight();
       const frames = scenarios[mode];
       const frame = frames[step];
       root.dataset.scenario = mode;
@@ -465,13 +536,14 @@
           items.append(empty);
         }
       }
-      root.querySelector('.kms-flow-count').textContent = (step + 1) + ' / ' + frames.length;
       root.querySelector('.kms-flow-step-title').textContent = frame.title;
       root.querySelector('.kms-flow-step-text').textContent = frame.text;
-      previousButton.disabled = step === 0;
-      nextButton.disabled = step === frames.length - 1;
+      wire.textContent = frame.move ? nameOf(frame.move[0]) + ' → ' + nameOf(frame.move[1]) + ' · ' + frame.move[2] : '';
+      if (shownMode !== mode) { controls.setSteps(frames.map(item => item.title)); shownMode = mode; }
+      controls.update(step, playing);
       modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
-      if (animate) moveValue(frame.move);
+      elapsed = animate ? 0 : MOVE + BADGE_HOLD;
+      drawRoute();
     }
 
     function schedule() {
@@ -487,29 +559,34 @@
       }, 3400);
     }
 
-    playButton.addEventListener('click', () => {
+    function toggle() {
       if (playing) { pause(); return; }
       if (step === scenarios[mode].length - 1) { step = 0; render(false); }
       playing = true;
-      if (animation) animation.play();
-      playButton.textContent = '일시정지';
-      playButton.setAttribute('aria-pressed', 'true');
+      controls.update(step, true);
       schedule();
-    });
-    previousButton.addEventListener('click', () => { pause(); step = Math.max(0, step - 1); render(); });
-    nextButton.addEventListener('click', () => { pause(); step = Math.min(scenarios[mode].length - 1, step + 1); render(); });
-    root.querySelector('.kms-flow-reset').addEventListener('click', () => { pause(); step = 0; render(false); });
+    }
+
+    // 일시정지 상태에서도 선택한 단계의 이동은 끝까지 보여 준다.
+    function frameTick(now) {
+      const delta = last ? Math.min(now - last, 100) : 0;
+      last = now;
+      if (layout && elapsed <= MOVE + BADGE_HOLD) { elapsed += delta; position(); }
+      window.requestAnimationFrame(frameTick);
+    }
+
     modeButtons.forEach(button => button.addEventListener('click', () => { pause(); mode = button.dataset.mode; step = 0; render(false); }));
-    document.addEventListener('visibilitychange', () => { if (document.hidden) { pause(); stopFlight(); } });
-    window.addEventListener('resize', stopFlight);
-    motion.addEventListener('change', () => { pause(); stopFlight(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+    motion.addEventListener('change', () => { pause(); drawRoute(); });
+    if ('ResizeObserver' in window) new ResizeObserver(() => drawRoute()).observe(scene);
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(entries => {
-        if (!entries[0].isIntersecting) { pause(); stopFlight(); }
+        if (!entries[0].isIntersecting) pause();
       }).observe(root);
     }
     root.querySelector('.kms-flow-modes').hidden = false;
     root.querySelector('.kms-flow-controls').hidden = false;
     render(false);
+    window.requestAnimationFrame(frameTick);
   })();
 </script>

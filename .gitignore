@@ -28,5 +28,6 @@ package-lock.json
 # agent cache
 .antigravitycli
 .codex
-.claude
+.claude/*
+!.claude/skills
 .gemini
