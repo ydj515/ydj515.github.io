@@ -1,5 +1,5 @@
 ---
-title: "PostgreSQL extension 소개
+title: "PostgreSQL extension 소개"
 description: PostgreSQL extension의 개념과 PostGIS, pgvector, pg_search, TimescaleDB, Citus 등 정리
 author: ydj515
 date: 2026-06-15 09:00:00 +0900
