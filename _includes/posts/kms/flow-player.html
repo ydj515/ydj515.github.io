@@ -446,8 +446,8 @@
     caption.insertBefore(wire, root.querySelector('.kms-flow-step-text'));
     const nameOf = actor => root.querySelector('[data-actor="' + actor + '"] .kms-flow-actor-title').textContent.trim();
 
-    // 옆 칸으로는 상자 사이를 바로 잇고, 두 칸 떨어진 곳으로는 가운데 상자를 통과하는 것처럼 선을 끊어 그린다.
-    // 좁은 화면에서 상자가 세로로 쌓이면 같은 규칙을 세로 방향으로 적용한다.
+    /* 옆 칸으로는 상자 사이를 바로 잇고, 두 칸 떨어진 곳으로는 가운데 상자를 통과하는 것처럼 선을 끊어 그린다. */
+    /* 좁은 화면에서 상자가 세로로 쌓이면 같은 규칙을 세로 방향으로 적용한다. */
     function routePath(move) {
       const area = scene.getBoundingClientRect();
       const box = actor => {
@@ -567,7 +567,7 @@
       schedule();
     }
 
-    // 일시정지 상태에서도 선택한 단계의 이동은 끝까지 보여 준다.
+    /* 일시정지 상태에서도 선택한 단계의 이동은 끝까지 보여 준다. */
     function frameTick(now) {
       const delta = last ? Math.min(now - last, 100) : 0;
       last = now;
