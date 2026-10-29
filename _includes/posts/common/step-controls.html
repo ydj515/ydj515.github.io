@@ -24,8 +24,8 @@
 @media(prefers-reduced-motion:reduce){.step-controls .sc-dot,.step-controls .sc-dot::before{transition:none}}
 </style>
 <script>
-  // 단계형 애니메이션이 함께 쓰는 재생·처음부터·캐러셀 컨트롤입니다.
-  // 재생 방식은 각 애니메이션이 맡고, 이 함수는 버튼 생성과 표시 상태만 다룹니다.
+  /* 단계형 애니메이션이 함께 쓰는 재생·처음부터·캐러셀 컨트롤입니다. */
+  /* 재생 방식은 각 애니메이션이 맡고, 이 함수는 버튼 생성과 표시 상태만 다룹니다. */
   window.ydjStepControls = window.ydjStepControls || ((container, handlers) => {
     const play = container.querySelector('.sc-play');
     const previous = container.querySelector('.sc-prev'), next = container.querySelector('.sc-next');
