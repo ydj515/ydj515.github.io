@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: latest
+          node-version: 24.22.3
 
       - run: npm install
       - run: npx semantic-release
