@@ -1,0 +1,24 @@
+name: Node Validation
+on:
+  push:
+    branches: [main]
+    paths: ['package.json', 'tools/version-only-release/**', '_sass/**', '_javascript/**', 'mise.toml', '.github/workflows/node-validation.yml']
+  pull_request:
+    paths: ['package.json', 'tools/version-only-release/**', '_sass/**', '_javascript/**', 'mise.toml', '.github/workflows/node-validation.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v4
+        with:
+          version: '2026.9.18'
+          install_args: node
+      - run: npm install
+      - run: npm run test:release
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --audit-level=low

@@ -1,0 +1,10 @@
+{
+  "name": "@ydj515/semantic-release-version-only",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./index.js",
+  "dependencies": {
+    "semver": "^7.3.2"
+  }
+}
